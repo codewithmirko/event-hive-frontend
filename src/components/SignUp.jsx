@@ -1,6 +1,5 @@
 import { useDisclosure } from "@mantine/hooks";
 import { Modal } from "@mantine/core";
-import SignUp from "./SignUp";
 
 import {
   TextInput,
@@ -16,25 +15,26 @@ import {
 } from "@mantine/core";
 import classes from "../styles/AuthenticationTitle.module.css";
 
-const SignIn = ({ opened, toggleSignUp, close }) => {
+const SignUp = ({ opened, toggleSignIn, close }) => {
   return (
     <>
       <Modal opened={opened} onClose={close} title="" size="auto">
         <Container size={420} my={40}>
           <Title align="center" className={classes.title}>
-            Sign In
+            Sign Up
           </Title>
-          <Text c="dimmed" size="sm" align="center" mt={5}>
-            Do not have an account yet?{" "}
+          <Text color="dimmed" size="sm" align="center" mt={5}>
+            Already have an account?{" "}
             <Button
               variant="subtle"
               size="sm"
+              type="button" // Ensure it's explicitly a button to prevent form submission
               onClick={() => {
-                close(); // First close the SignIn modal
-                toggleSignUp(); // Then open the SignUp modal
+                close(); // Close this modal first
+                toggleSignIn(); // Then trigger the Sign In modal
               }}
             >
-              Sign up instead
+              Sign in instead
             </Button>
           </Text>
 
@@ -50,13 +50,9 @@ const SignIn = ({ opened, toggleSignUp, close }) => {
               required
               mt="md"
             />
-            <Group justify="space-between" mt="lg">
-              <Button variant="subtle" size="sm">
-                Forgot password?
-              </Button>
-            </Group>
+            <Group justify="space-between" mt="lg"></Group>
             <Button fullWidth mt="xl" onClick={close}>
-              Sign in
+              Sign up
             </Button>
           </Paper>
         </Container>
@@ -65,4 +61,4 @@ const SignIn = ({ opened, toggleSignUp, close }) => {
   );
 };
 
-export default SignIn;
+export default SignUp;

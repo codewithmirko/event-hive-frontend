@@ -3,13 +3,13 @@ import { Button } from "@mantine/core";
 import { Routes, Route } from "react-router-dom";
 
 import HomePage from "./pages/HomePage";
-import NavBar from "./components/Navbar";
 import ErrorPage from "./pages/ErrorPage";
+import Header from "./components/Header";
 
 function App() {
   return (
     <>
-      <NavBar />
+      <Header />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="*" element={<ErrorPage />} />
