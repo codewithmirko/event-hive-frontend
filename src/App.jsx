@@ -1,17 +1,21 @@
+import "@mantine/core/styles.css";
+import { Button } from "@mantine/core";
+import { Routes, Route } from "react-router-dom";
 
-import '@mantine/core/styles.css';
-import { Button } from '@mantine/core';
-
+import HomePage from "./pages/HomePage";
+import ErrorPage from "./pages/ErrorPage";
+import Header from "./components/Header";
 
 function App() {
-
-
   return (
     <>
-<Button variant="filled" color="yellow">Click me</Button>
-
+      <Header />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="*" element={<ErrorPage />} />
+      </Routes>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
