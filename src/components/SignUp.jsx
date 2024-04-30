@@ -1,5 +1,6 @@
 import { useDisclosure } from "@mantine/hooks";
 import { Modal } from "@mantine/core";
+import { useNavigate } from "react-router-dom";
 
 import {
   TextInput,
@@ -16,6 +17,24 @@ import {
 import classes from "../styles/AuthenticationTitle.module.css";
 
 const SignUp = ({ opened, toggleSignIn, close }) => {
+  const navigate = useNavigate();
+
+  const handleSignupSubmit = (e) => {
+    e.preventDefault();
+
+    const requestBody = { email, password, name };
+
+    axios
+      .post(`${API_URL}/auth/signup`, requestBody)
+      .then((response) => {
+        navigate("/");
+      })
+      .catch((error) => {
+        const errorDescription = error.response.data.message;
+        setErrorMessage(errorDescription);
+      });
+  };
+
   return (
     <>
       <Modal opened={opened} onClose={close} title="" size="auto">
@@ -51,7 +70,14 @@ const SignUp = ({ opened, toggleSignIn, close }) => {
               mt="md"
             />
             <Group justify="space-between" mt="lg"></Group>
-            <Button fullWidth mt="xl" onClick={close}>
+            <Button
+              fullWidth
+              mt="xl"
+              onClick={() => {
+                handleSignupSubmit();
+                close();
+              }}
+            >
               Sign up
             </Button>
           </Paper>

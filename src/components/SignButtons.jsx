@@ -23,7 +23,9 @@ const SignButtons = () => {
   return (
     <>
       <Button onClick={handleSignIn}>Sign In</Button>
-      <Button onClick={handleSignUp}>Sign Up</Button>
+      <Button onClick={handleSignUp} variant="outline">
+        Sign Up
+      </Button>
       <SignIn
         opened={signInOpened}
         toggleSignUp={handleSignUp}
