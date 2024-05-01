@@ -1,6 +1,10 @@
 import { useDisclosure } from "@mantine/hooks";
 import { Modal } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useState } from "react";
+
+const API_URL = "http://localhost:5005";
 
 import {
   TextInput,
@@ -18,11 +22,25 @@ import classes from "../styles/AuthenticationTitle.module.css";
 
 const SignUp = ({ opened, toggleSignIn, close }) => {
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleSignupSubmit = (e) => {
+  const handleEmail = (e) => setEmail(e.target.value);
+  const handlePassword = (e) => setPassword(e.target.value);
+  const handleConfirmPassword = (e) => setConfirmPassword(e.target.value);
+
+  const handleSignUpSubmit = (e) => {
     e.preventDefault();
 
+    if (password !== confirmPassword) {
+      console.log("The passwords do not match! Please check again.");
+      return;
+    }
+
     const requestBody = { email, password, name };
+    console.log(requestBody);
+    console.log("hello");
 
     axios
       .post(`${API_URL}/auth/signup`, requestBody)
@@ -30,8 +48,8 @@ const SignUp = ({ opened, toggleSignIn, close }) => {
         navigate("/");
       })
       .catch((error) => {
-        const errorDescription = error.response.data.message;
-        setErrorMessage(errorDescription);
+        console.log(error.response.data);
+        console.log(error.response.status);
       });
   };
 
@@ -47,7 +65,7 @@ const SignUp = ({ opened, toggleSignIn, close }) => {
             <Button
               variant="subtle"
               size="sm"
-              type="button" // Ensure it's explicitly a button to prevent form submission
+              type="button"
               onClick={() => {
                 close(); // Close this modal first
                 toggleSignIn(); // Then trigger the Sign In modal
@@ -56,31 +74,45 @@ const SignUp = ({ opened, toggleSignIn, close }) => {
               Sign in instead
             </Button>
           </Text>
-
-          <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-            <TextInput
-              label="Email"
-              placeholder="john@eventhive.com"
-              required
-            />
-            <PasswordInput
-              label="Password"
-              placeholder="Your password"
-              required
-              mt="md"
-            />
-            <Group justify="space-between" mt="lg"></Group>
-            <Button
-              fullWidth
-              mt="xl"
-              onClick={() => {
-                handleSignupSubmit();
-                close();
-              }}
-            >
-              Sign up
-            </Button>
-          </Paper>
+          <form onSubmit={handleSignUpSubmit}>
+            <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+              <TextInput
+                label="Email"
+                placeholder="john@eventhive.com"
+                value={email}
+                onChange={handleEmail}
+                required
+              />
+              <PasswordInput
+                label="Password"
+                placeholder="Your password"
+                required
+                mt="md"
+                value={password}
+                onChange={handlePassword}
+              />
+              <PasswordInput
+                label="confirmPassword"
+                placeholder="Confirm password"
+                required
+                mt="md"
+                value={confirmPassword}
+                onChange={handleConfirmPassword}
+              />
+              <Group justify="space-between" mt="lg"></Group>
+              <Button
+                fullWidth
+                mt="xl"
+                type="submit"
+                // onClick={() => {
+                //   console.log("i am onclick");
+                //   close();
+                // }}
+              >
+                Sign up
+              </Button>
+            </Paper>
+          </form>
         </Container>
       </Modal>
     </>
