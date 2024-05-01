@@ -40,12 +40,12 @@ const SignUp = ({ opened, toggleSignIn, close }) => {
 
     const requestBody = { email, password, name };
     console.log(requestBody);
-    console.log("hello");
 
     axios
       .post(`${API_URL}/auth/signup`, requestBody)
       .then((response) => {
-        navigate("/");
+        // navigate("/");
+        close();
       })
       .catch((error) => {
         console.log(error.response.data);
