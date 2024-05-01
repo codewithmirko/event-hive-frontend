@@ -16,7 +16,7 @@ function AuthProviderWrapper(props) {
   const authenticateUser = () => {
     //  <==  ADD
     // Get the stored token from the localStorage
-    const storedToken = localStorage.getItem("token");
+    const storedToken = localStorage.getItem("authToken");
     console.log(`I am the storedToken:`, storedToken);
     console.log("I am the authenticateUser function");
 
@@ -50,9 +50,23 @@ function AuthProviderWrapper(props) {
     }
   };
 
+  const removeToken = () => {
+    // <== ADD
+    // Upon logout, remove the token from the localStorage
+    localStorage.removeItem("authToken");
+  };
+
+  const logOutUser = () => {
+    console.log("I am the logOuUser function");
+    // <== ADD
+    // To log out the user, remove the token
+    removeToken();
+    // and update the state variables
+    authenticateUser();
+  };
+
   useEffect(() => {
-    //  <==  ADD
-    // to be updated in the next step
+    authenticateUser();
   }, []);
 
   return (
@@ -63,6 +77,7 @@ function AuthProviderWrapper(props) {
         user,
         storeToken,
         authenticateUser,
+        logOutUser,
       }}
     >
       {props.children}

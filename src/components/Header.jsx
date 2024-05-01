@@ -31,6 +31,8 @@ import {
 import classes from "../styles/Header.module.css";
 import SearchBox from "./SearchBox";
 import SignButtons from "./SignButtons";
+import { useContext } from "react"; // <== IMPORT
+import { AuthContext } from "../context/auth.context"; // <== IMPORT
 
 const mockdata = [
   {
@@ -41,6 +43,7 @@ const mockdata = [
 ];
 
 function Header() {
+  const { isLoggedIn, user, logOutUser } = useContext(AuthContext);
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
   const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
@@ -59,9 +62,26 @@ function Header() {
             <SearchBox />
           </Group>
 
-          <Group visibleFrom="sm">
-            <SignButtons />
-          </Group>
+          {isLoggedIn && (
+            <>
+              <Group visibleFrom="sm">
+                <button
+                  visibleFrom="sm"
+                  variant="outline"
+                  color="red"
+                  onClick={logOutUser}
+                >
+                  Logout
+                </button>
+              </Group>
+            </>
+          )}
+
+          {!isLoggedIn && (
+            <Group visibleFrom="sm">
+              <SignButtons />
+            </Group>
+          )}
 
           <Burger
             opened={drawerOpened}
@@ -90,9 +110,20 @@ function Header() {
           <Divider my="sm" />
 
           {/* Right section */}
-          <Group justify="center" grow pb="xl" px="md">
-            <SignButtons />
-          </Group>
+
+          {!isLoggedIn && (
+            <Group justify="center" grow pb="xl" px="md">
+              <SignButtons />
+            </Group>
+          )}
+
+          {isLoggedIn && (
+            <Group justify="center" grow pb="xl" px="md">
+              <button variant="outline" color="red" onClick={logOutUser}>
+                Logout
+              </button>
+            </Group>
+          )}
         </ScrollArea>
       </Drawer>
     </Box>
