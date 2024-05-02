@@ -25,7 +25,7 @@ const SignIn = ({ opened, toggleSignUp, close }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { storeToken } = useContext(AuthContext);
+  const { storeToken, authenticateUser } = useContext(AuthContext);
 
   const handleEmail = (e) => setEmail(e.target.value);
   const handlePassword = (e) => setPassword(e.target.value);
@@ -43,12 +43,12 @@ const SignIn = ({ opened, toggleSignUp, close }) => {
         console.log("JWT token", response.data.token);
         console.log("Response data:", response.data);
         storeToken(response.data.token);
+        authenticateUser();
         // navigate("/");
         close();
       })
       .catch((error) => {
-        console.log(error.response.data);
-        console.log(error.response.status);
+        console.log(error);
       });
   };
 
