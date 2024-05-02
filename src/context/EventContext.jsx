@@ -21,7 +21,7 @@ const EventProvider = ({ children }) => {
         headers: { 'Authorization': getToken(), 'Content-Type': 'application/json' }
     });
 
-    const getDataEvent  = async () => {
+    const getDataEvent = async () => {
         try {
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/events`, {
                 headers: {
