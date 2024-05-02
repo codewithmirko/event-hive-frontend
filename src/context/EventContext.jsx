@@ -23,20 +23,24 @@ const EventProvider = ({ children }) => {
 
     const getDataEvent  = async () => {
         try {
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/events`, {
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/events`, {
                 headers: {
                     "Cache-Control": "no-cache"
                 },
             });
+            const allEvents = response.data;
+            console.log(allEvents[0])
             setEvents(response.data);
         } catch (error) {
             console.error("Failed to fetch events:", error);
         }
     };
+
+
     const updateEvent = async (id, updatedEventData) => {
         try {
             const response = await axios.patch(
-                `${import.meta.env.VITE_API_URL}/events/${id}`,
+                `${import.meta.env.VITE_API_URL}/api/events/${id}`,
                 updatedEventData,
                 authHeader()
             );
@@ -50,7 +54,7 @@ const EventProvider = ({ children }) => {
 
     const deleteEvent = async (id) => {
         try {
-            await axios.delete(`${import.meta.env.VITE_API_URL}/events/${id}`, authHeader());
+            await axios.delete(`${import.meta.env.VITE_API_URL}/api/events/${id}`, authHeader());
             setEvents(events.filter((event) => event.id !== id));
             navigate("/"); // Redirect user after deletion
         } catch (error) {
@@ -60,7 +64,7 @@ const EventProvider = ({ children }) => {
 
     const addEvent = async (event) => {
         try {
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/events/`, event, authHeader());
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/events/`, event, authHeader());
             setEvents((prevEvents) => [...prevEvents, response.data]);
         } catch (error) {
             console.error("Error creating event:", error);

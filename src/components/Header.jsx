@@ -58,27 +58,27 @@ function Header() {
           </a>
 
           {/* Middle section */}
-          <Group h="100%" gap={0} visibleFrom="sm">
+          <Group h="100%" gap={0} visiblefrom="sm">
             <SearchBox />
           </Group>
 
           {isLoggedIn && (
             <>
-              <Group visibleFrom="sm">
-                <button
-                  visibleFrom="sm"
+              <Group visiblefrom="sm">
+                <Button
+                  visiblefrom="sm"
                   variant="outline"
                   color="red"
                   onClick={logOutUser}
                 >
                   Logout
-                </button>
+                </Button>
               </Group>
             </>
           )}
 
           {!isLoggedIn && (
-            <Group visibleFrom="sm">
+            <Group visiblefrom="sm">
               <SignButtons />
             </Group>
           )}
