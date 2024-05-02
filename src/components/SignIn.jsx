@@ -1,107 +1,102 @@
-import { useDisclosure } from "@mantine/hooks";
-import { Modal } from "@mantine/core";
-import SignUp from "./SignUp";
-import { useState, useContext } from "react";
+import React, { useContext } from "react";
 import axios from "axios";
-import { AuthContext } from "../context/auth.context";
-
-const API_URL = "http://localhost:5005";
-
 import {
   TextInput,
+  Text,
   PasswordInput,
-  Checkbox,
-  Anchor,
   Paper,
   Title,
-  Text,
   Container,
   Group,
   Button,
+  Modal,
 } from "@mantine/core";
+import { useForm } from "@mantine/form"; // USING THIS so we don't use states and .. all the extra stuff
 import classes from "../styles/AuthenticationTitle.module.css";
+import { AuthContext } from "../context/auth.context";
+import CustomNotification from "./CustomNotification";  // Ensure this path is correct
+
+const API_URL = "http://localhost:5005";
 
 const SignIn = ({ opened, toggleSignUp, close }) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
   const { storeToken, authenticateUser } = useContext(AuthContext);
 
-  const handleEmail = (e) => setEmail(e.target.value);
-  const handlePassword = (e) => setPassword(e.target.value);
+  const form = useForm({
+    initialValues: {
+      email: '',
+      password: '',
+    },
 
-  const handleSignInSubmit = (e) => {
-    e.preventDefault();
+    validate: {
+      email: (value) => (/^\S+@\S+\.\S+$/.test(value) ? null : 'Invalid email'),
+      password: (value) => (value.length >= 1 ? null : 'Password must be at least 1 character'),
+    },
+  });
 
-    const requestBody = { email, password };
-    console.log(requestBody);
-
+  const handleSignInSubmit = (values) => {
     axios
-      .post(`${API_URL}/auth/login`, requestBody)
+      .post(`${API_URL}/auth/login`, values)
       .then((response) => {
-        console.log("Sign In succesful");
-        console.log("JWT token", response.data.token);
-        console.log("Response data:", response.data);
+        console.log("Sign In successful", response);
         storeToken(response.data.token);
         authenticateUser();
-        // navigate("/");
+        CustomNotification({
+          type: 'success',
+          message: `Welcome back`
+        });
         close();
       })
       .catch((error) => {
+        CustomNotification({
+          type: 'error',
+          message: error.response ? error.response.data.message : 'Failed to connect to the server'
+        });
         console.log(error);
       });
   };
 
   return (
-    <>
-      <Modal opened={opened} onClose={close} title="" size="auto">
-        <Container size={420} my={40}>
-          <Title align="center" className={classes.title}>
-            Sign In
-          </Title>
-          <Text c="dimmed" size="sm" align="center" mt={5}>
-            Do not have an account yet?{" "}
-            <Button
-              variant="subtle"
-              size="sm"
-              onClick={() => {
-                close(); // First close the SignIn modal
-                toggleSignUp(); // Then open the SignUp modal
-              }}
-            >
-              Sign up instead
-            </Button>
-          </Text>
-          <form onSubmit={handleSignInSubmit}>
-            <Paper withBorder shadow="md" p={30} mt={30} radius="md">
-              <TextInput
-                label="Email"
-                placeholder="john@eventhive.com"
-                value={email}
-                onChange={handleEmail}
-                required
-              />
-              <PasswordInput
-                label="Password"
-                placeholder="Your password"
-                value={password}
-                onChange={handlePassword}
-                required
-                mt="md"
-              />
-              <Group justify="space-between" mt="lg">
-                <Button variant="subtle" size="sm">
-                  Forgot password?
-                </Button>
-              </Group>
-              <Button type="submit" fullWidth mt="xl">
-                Sign in
+    <Modal opened={opened} onClose={close} title="" size="auto">
+      <Container size={420} my={40}>
+        <Title align="center" className={classes.title}>
+          Sign In
+        </Title>
+        <Text color="dimmed" size="sm" align="center" mt={5}>
+          Do not have an account yet?{" "}
+          <Button variant="subtle" size="sm" onClick={() => {
+            close();
+            toggleSignUp();
+          }}>
+            Sign up instead
+          </Button>
+        </Text>
+        <form onSubmit={form.onSubmit(handleSignInSubmit)}>
+          <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+            <TextInput
+              label="Email"
+              placeholder="john@eventhive.com"
+              {...form.getInputProps('email')}
+              required
+            />
+            <PasswordInput
+              label="Password"
+              placeholder="Your password"
+              {...form.getInputProps('password')}
+              required
+              mt="md"
+            />
+            <Group position="right" mt="lg">
+              <Button variant="subtle" size="sm">
+                Forgot password?
               </Button>
-            </Paper>
-          </form>
-        </Container>
-      </Modal>
-    </>
+            </Group>
+            <Button type="submit" fullWidth mt="xl" loading={form.isSubmitting}>
+              Sign in
+            </Button>
+          </Paper>
+        </form>
+      </Container>
+    </Modal>
   );
 };
 

@@ -28,26 +28,20 @@ import {
   IconCoin,
   IconChevronDown,
 } from "@tabler/icons-react";
+import { useNavigate } from "react-router-dom";
 import classes from "../styles/Header.module.css";
 import SearchBox from "./SearchBox";
 import SignButtons from "./SignButtons";
 import { useContext } from "react"; // <== IMPORT
 import { AuthContext } from "../context/auth.context"; // <== IMPORT
 
-const mockdata = [
-  {
-    icon: IconCode,
-    title: "Open source",
-    description: "This Pokémon’s cry is very loud and distracting",
-  },
-];
+
 
 function Header() {
   const { isLoggedIn, user, logOutUser } = useContext(AuthContext);
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
-  const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
-  const theme = useMantineTheme();
+    navigate = useNavigate();
 
   return (
     <Box pb={120}>
@@ -78,7 +72,7 @@ function Header() {
           )}
 
           {!isLoggedIn && (
-            <Group visiblefrom="sm">
+            <Group  visiblefrom="sm">
               <SignButtons />
             </Group>
           )}

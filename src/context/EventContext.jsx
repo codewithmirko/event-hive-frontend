@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { showNotification } from '@mantine/notifications';
 import axios from "axios";
 
 const EventContext = createContext();
@@ -45,8 +46,9 @@ const EventProvider = ({ children }) => {
                 authHeader()
             );
             setEvents(
-                events.map((event) => (event.id === id ? { ...event, ...response.data } : event))
+                events.map((event) => (event._id === id ? { ...event, ...response.data } : event))
             );
+            
         } catch (error) {
             console.error("Failed to update event:", error);
         }
@@ -66,17 +68,64 @@ const EventProvider = ({ children }) => {
         try {
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/events/`, event, authHeader());
             setEvents((prevEvents) => [...prevEvents, response.data]);
+            navigate(`/event/${response.data._id}`);
         } catch (error) {
             console.error("Error creating event:", error);
         }
     };
+    const updateEventParticipation = async (eventId, actionType) => {
+        const endpoint = actionType === 'join' ? 'attend' : 'leave';
+        const messageSuccess = actionType === 'join' ? 'You have joined the event!' : 'You have left the event!';
+        const messageError = actionType === 'join' ? 'Failed to join event' : 'Failed to leave event';
+    
+        try {
+            const response = await axios.patch(`http://localhost:5005/api/events/${eventId}/${endpoint}`, {}, authHeader());
+            if (response.data) {
+                setEvents(prevEvents => {
+                    if (!Array.isArray(prevEvents)) {
+                        console.error('Expected an array for prevEvents, received:', prevEvents);
+                        return []; // Maintain state integrity
+                    }
+                    const index = prevEvents.findIndex(event => event._id === eventId);
+                    if (index === -1) {
+                        console.error('Event not found in the current state');
+                        return prevEvents;
+                    }
+                    const updatedEvents = [...prevEvents];
+                    updatedEvents[index] = { ...prevEvents[index], ...response.data };
+                    return updatedEvents;
+                });
+                showNotification({
+                    title: 'Success',
+                    message: messageSuccess,
+                    color: 'green',
+                });
+            } else {
+                throw new Error(`No data returned from ${endpoint} event API`);
+            }
+        } catch (error) {
+            console.error(`Error ${actionType} event:`, error);
+            showNotification({
+                title: 'Error',
+                message: messageError,
+                color: 'red',
+            });
+        }
+    };
+    
+    
+    
+    
+    
+    
 
+      
     useEffect(() => {
         getDataEvent();
     }, []);
 
     return (
-        <EventContext.Provider value={{ events, updateEvent, deleteEvent, addEvent }}>
+        <EventContext.Provider value={{ events, updateEvent, deleteEvent, addEvent, updateEventParticipation }}>
             {children}
         </EventContext.Provider>
     );

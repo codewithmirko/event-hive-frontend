@@ -1,0 +1,13 @@
+/* Custom CSS to correctly style the arrows */
+.mantine-DatePicker-arrow {
+    transform: rotate(0); /* Adjust rotation if they are not correctly oriented */
+    width: 16px; /* Adjust size as needed */
+    height: 16px; /* Adjust size as needed */
+  }
+  
+  .mantine-DatePickerInput {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  

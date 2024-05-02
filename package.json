@@ -10,11 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@mantine/core": "^7.8.1",
-    "@mantine/form": "^7.8.1",
-    "@mantine/hooks": "^7.8.1",
+    "@mantine/core": "^7.9.0",
+    "@mantine/dates": "^7.9.0",
+    "@mantine/form": "^7.9.0",
+    "@mantine/hooks": "^7.9.0",
     "@mantine/modals": "^7.8.1",
+    "@mantine/notifications": "^7.9.0",
     "@mantinex/mantine-logo": "^1.0.1",
+    "@tabler/icons": "^3.3.0",
     "@tabler/icons-react": "^3.2.0",
     "axios": "^1.6.8",
     "cors": "^2.8.5",
