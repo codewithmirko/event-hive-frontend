@@ -22,10 +22,12 @@ import classes from "../styles/AuthenticationTitle.module.css";
 
 const SignUp = ({ opened, toggleSignIn, close }) => {
   const navigate = useNavigate();
+  const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const handleUserName = (e) => setUserName(e.target.value);
   const handleEmail = (e) => setEmail(e.target.value);
   const handlePassword = (e) => setPassword(e.target.value);
   const handleConfirmPassword = (e) => setConfirmPassword(e.target.value);
@@ -38,12 +40,13 @@ const SignUp = ({ opened, toggleSignIn, close }) => {
       return;
     }
 
-    const requestBody = { email, password, name };
+    const requestBody = { email, password, username: userName };
     console.log(requestBody);
 
     axios
       .post(`${API_URL}/auth/signup`, requestBody)
       .then((response) => {
+        console.log("Signup succesful");
         // navigate("/");
         close();
       })
@@ -77,6 +80,13 @@ const SignUp = ({ opened, toggleSignIn, close }) => {
           <form onSubmit={handleSignUpSubmit}>
             <Paper withBorder shadow="md" p={30} mt={30} radius="md">
               <TextInput
+                label="Username"
+                placeholder="coolusername"
+                value={userName}
+                onChange={handleUserName}
+                required
+              />
+              <TextInput
                 label="Email"
                 placeholder="john@eventhive.com"
                 value={email}
@@ -92,7 +102,7 @@ const SignUp = ({ opened, toggleSignIn, close }) => {
                 onChange={handlePassword}
               />
               <PasswordInput
-                label="confirmPassword"
+                label="Confirm Password"
                 placeholder="Confirm password"
                 required
                 mt="md"
