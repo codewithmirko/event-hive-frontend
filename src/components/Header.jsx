@@ -28,8 +28,8 @@ import {
   IconCoin,
   IconChevronDown,
 } from "@tabler/icons-react";
-import { useNavigate } from "react-router-dom";
 import classes from "../styles/Header.module.css";
+import { Link } from "react-router-dom";
 import SearchBox from "./SearchBox";
 import SignButtons from "./SignButtons";
 import { useContext } from "react"; // <== IMPORT
@@ -41,15 +41,15 @@ function Header() {
   const { isLoggedIn, user, logOutUser } = useContext(AuthContext);
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
-    navigate = useNavigate();
+
 
   return (
     <Box pb={120}>
       <header className={classes.header}>
         <Group justify="space-between" h="100%">
-          <a href="#" className={classes.link}>
+          <Link to='/' className={classes.link}>
             <MantineLogo size={30} />{" "}
-          </a>
+          </Link>
 
           {/* Middle section */}
           <Group h="100%" gap={0} visiblefrom="sm">
