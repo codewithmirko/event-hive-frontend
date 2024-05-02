@@ -9,6 +9,7 @@ import HomePage from "./pages/HomePage";
 import ErrorPage from "./pages/ErrorPage";
 import Header from "./components/Header";
 import { EventProvider } from "./context/EventContext";
+import FooterBar from "./components/FooterBar";
 import EventDetailPage from "./pages/EventDetailPage"
 import CreateEventPage from "./pages/CreateEventPage";
 
@@ -24,6 +25,7 @@ function App() {
           <Route path="*" element={<ErrorPage />} />
         </Routes>
       </EventProvider>
+      <FooterBar />
     </>
   );
 }
