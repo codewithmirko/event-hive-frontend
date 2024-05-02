@@ -6,6 +6,7 @@ import HomePage from "./pages/HomePage";
 import ErrorPage from "./pages/ErrorPage";
 import Header from "./components/Header";
 import { EventProvider } from "./context/EventContext";
+import FooterBar from "./components/FooterBar";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="*" element={<ErrorPage />} />
         </Routes>
       </EventProvider>
+      <FooterBar />
     </>
   );
 }
