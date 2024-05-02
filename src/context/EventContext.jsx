@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect } from "react";
-import { navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const EventContext = createContext();
 
@@ -20,12 +21,11 @@ const EventProvider = ({ children }) => {
         headers: { 'Authorization': getToken(), 'Content-Type': 'application/json' }
     });
 
-    const getDataEvent = async () => {
+    const getDataEvent  = async () => {
         try {
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/events`, {
                 headers: {
-                    "Cache-Control": "no-cache",
-                    ...authHeader().headers
+                    "Cache-Control": "no-cache"
                 },
             });
             setEvents(response.data);
@@ -33,7 +33,6 @@ const EventProvider = ({ children }) => {
             console.error("Failed to fetch events:", error);
         }
     };
-
     const updateEvent = async (id, updatedEventData) => {
         try {
             const response = await axios.patch(
