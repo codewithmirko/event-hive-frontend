@@ -1,88 +1,46 @@
-import {
-  HoverCard,
-  Group,
-  Button,
-  UnstyledButton,
-  Text,
-  SimpleGrid,
-  ThemeIcon,
-  Anchor,
-  Divider,
-  Center,
-  Box,
-  Burger,
-  Drawer,
-  Collapse,
-  ScrollArea,
-  rem,
-  useMantineTheme,
-} from "@mantine/core";
+import React from "react";
+import { Link } from "react-router-dom";
 import { MantineLogo } from "@mantinex/mantine-logo";
+import SignButtons from "./SignButtons";
 import { useDisclosure } from "@mantine/hooks";
 import {
-  IconNotification,
-  IconCode,
-  IconBook,
-  IconChartPie3,
-  IconFingerprint,
-  IconCoin,
-  IconChevronDown,
-} from "@tabler/icons-react";
+  Box,
+  Button,
+  rem,
+  Burger,
+  Group,
+  Divider,
+  Drawer,
+  ScrollArea,
+} from "@mantine/core";
+import { useContext } from "react";
+import { AuthContext } from "../context/auth.context";
 import classes from "../styles/Header.module.css";
-import { Link } from "react-router-dom";
-import SearchBox from "./SearchBox";
-import SignButtons from "./SignButtons";
-import { useContext } from "react"; // <== IMPORT
-import { AuthContext } from "../context/auth.context"; // <== IMPORT
-
-
+import logo from "../assets/logo-text-full-res.png";
 
 function Header() {
-  const { isLoggedIn, user, logOutUser } = useContext(AuthContext);
+  const { isLoggedIn, logOutUser } = useContext(AuthContext);
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
 
-
   return (
-    <Box pb={120}>
+    <Box pb={0}>
       <header className={classes.header}>
-        <Group justify="space-between" h="100%">
-          <Link to='/' className={classes.link}>
-            <MantineLogo size={30} />{" "}
-          </Link>
+        <Link to="/" className={`${classes.link} ${classes.logo}`}>
+          <MantineLogo size={30} />
+        </Link>
 
-          {/* Middle section */}
-          <Group h="100%" gap={0} visiblefrom="sm">
-            <SearchBox />
-          </Group>
-
-          {isLoggedIn && (
-            <>
-              <Group visiblefrom="sm">
-                <Button
-                  visiblefrom="sm"
-                  variant="outline"
-                  color="red"
-                  onClick={logOutUser}
-                >
-                  Logout
-                </Button>
-              </Group>
-            </>
+        <Group className={classes.buttons} visibleFrom="sm">
+          {isLoggedIn ? (
+            <Button variant="outline" color="red" onClick={logOutUser}>
+              Logout
+            </Button>
+          ) : (
+            <SignButtons />
           )}
-
-          {!isLoggedIn && (
-            <Group  visiblefrom="sm">
-              <SignButtons />
-            </Group>
-          )}
-
-          <Burger
-            opened={drawerOpened}
-            onClick={toggleDrawer}
-            hiddenFrom="sm"
-          />
         </Group>
+
+        <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="sm" />
       </header>
 
       <Drawer
@@ -103,19 +61,15 @@ function Header() {
 
           <Divider my="sm" />
 
-          {/* Right section */}
-
-          {!isLoggedIn && (
+          {!isLoggedIn ? (
             <Group justify="center" grow pb="xl" px="md">
               <SignButtons />
             </Group>
-          )}
-
-          {isLoggedIn && (
+          ) : (
             <Group justify="center" grow pb="xl" px="md">
-              <button variant="outline" color="red" onClick={logOutUser}>
+              <Button variant="outline" color="red" onClick={logOutUser}>
                 Logout
-              </button>
+              </Button>
             </Group>
           )}
         </ScrollArea>

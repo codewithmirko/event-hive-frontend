@@ -3,6 +3,7 @@ import axios from "axios";
 const API_URL = "http://localhost:5005";
 
 const AuthContext = React.createContext();
+import CustomNotification from "../components/CustomNotification";
 
 function AuthProviderWrapper(props) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -62,6 +63,10 @@ function AuthProviderWrapper(props) {
     // To log out the user, remove the token
     removeToken();
     // and update the state variables
+    CustomNotification({
+      type: "success",
+      message: `You've been logged out`,
+    });
     authenticateUser();
   };
 
