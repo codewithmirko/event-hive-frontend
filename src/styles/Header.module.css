@@ -8,10 +8,6 @@
   padding: 0 var(--mantine-spacing-md);
 }
 
-.logo {
-  flex-grow: 1;
-}
-
 .buttons {
   flex-shrink: 0;
 }
@@ -34,6 +30,7 @@
   display: flex;
   align-items: center;
   height: 100%;
+  width: auto;
   padding-left: var(--mantine-spacing-md);
   padding-right: var(--mantine-spacing-md);
   text-decoration: none;

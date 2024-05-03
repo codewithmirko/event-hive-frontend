@@ -12,6 +12,7 @@ import {
   Divider,
   Drawer,
   ScrollArea,
+  Image,
 } from "@mantine/core";
 import { useContext } from "react";
 import { AuthContext } from "../context/auth.context";
@@ -27,7 +28,7 @@ function Header() {
     <Box pb={0}>
       <header className={classes.header}>
         <Link to="/" className={`${classes.link} ${classes.logo}`}>
-          <MantineLogo size={30} />
+          <Image src={logo} h={35} w="auto" />
         </Link>
 
         <Group className={classes.buttons} visibleFrom="sm">
