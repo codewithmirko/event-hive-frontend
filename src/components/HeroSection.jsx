@@ -12,6 +12,7 @@ import {
 import { IconCheck } from "@tabler/icons-react";
 import eventPicture from "../assets/event-picture.png";
 import classes from "../styles/HeroSection.module.css";
+import { Link } from "react-router-dom";
 
 function HeroSection() {
   return (
@@ -51,9 +52,21 @@ function HeroSection() {
           </List>
 
           <Group mt={30}>
-            <Button radius="xl" size="md" className={classes.control}>
-              Sign Up
-            </Button>
+            <Link to="/event/create" className={classes.link}>
+              <Button radius="xl" size="md" className={classes.control}>
+                Create Event
+              </Button>
+            </Link>
+            <Link to="/about" className={classes.link}>
+              <Button
+                variant="default"
+                radius="xl"
+                size="md"
+                className={classes.control}
+              >
+                Learn more
+              </Button>
+            </Link>
           </Group>
         </div>
         <img src={eventPicture} className={classes.image} />
