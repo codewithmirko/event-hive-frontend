@@ -19,13 +19,12 @@ function HeroSection() {
       <div className={classes.inner}>
         <div className={classes.content}>
           <Title className={classes.title}>
-            <span className={classes.highlight}>EventHive:</span> <br />
-            The No.1 Social Event Platform
+            Your <span className={classes.highlight}>Social</span> <br />
+            Event Platform
           </Title>
           <Text c="dimmed" mt="md">
-            Immerse yourself in a community where connections are made through
-            shared experiences. Host or join a range of events tailored to your
-            passions and locality.
+            Connections are made through shared experiences. Host or join events
+            tailored to your passions and locality.
           </Text>
 
           <List
@@ -42,10 +41,6 @@ function HeroSection() {
             }
           >
             <List.Item>
-              <b>Community Interaction</b> – Connect with like-minded
-              individuals through diverse events
-            </List.Item>
-            <List.Item>
               <b>Discover yourself</b> – Expand your social horizons by
               discovering new events and activities.
             </List.Item>
@@ -61,7 +56,7 @@ function HeroSection() {
             </Button>
           </Group>
         </div>
-        <Image src={eventPicture} className={classes.image} />
+        <img src={eventPicture} className={classes.image} />
       </div>
     </Container>
   );

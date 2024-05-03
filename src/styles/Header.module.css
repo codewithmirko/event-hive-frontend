@@ -1,9 +1,33 @@
 .header {
-  height: rem(60px);
-  padding-left: var(--mantine-spacing-md);
-  padding-right: var(--mantine-spacing-md);
+  height: rem(56px);
   border-bottom: rem(1px) solid
     light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 var(--mantine-spacing-md);
+}
+
+.logo {
+  flex-grow: 1;
+}
+
+.buttons {
+  flex-shrink: 0;
+}
+
+@media (min-width: 1000px) {
+  .header {
+    padding: 0 calc((100vw - 1000px) / 2);
+  }
+
+  .logo {
+    margin-left: 0;
+  }
+
+  .buttons {
+    margin-right: 0;
+  }
 }
 
 .link {
@@ -19,7 +43,6 @@
 
   @media (max-width: mantine-breakpoint-sm) {
     height: rem(42px);
-    width: 100%;
   }
 
   @mixin hover {
@@ -43,15 +66,14 @@
   }
 }
 
-.dropdownFooter {
-  background-color: light-dark(
-    var(--mantine-color-gray-0),
-    var(--mantine-color-dark-7)
-  );
-  margin: calc(var(--mantine-spacing-md) * -1);
-  margin-top: var(--mantine-spacing-sm);
-  padding: var(--mantine-spacing-md) calc(var(--mantine-spacing-md) * 2);
-  padding-bottom: var(--mantine-spacing-xl);
-  border-top: rem(1px) solid
-    light-dark(var(--mantine-color-gray-1), var(--mantine-color-dark-5));
+.inner {
+  display: flex;
+  height: rem(56px);
+  justify-content: space-between;
+  align-items: center;
+  min-width: 60%;
+
+  @media (max-width: mantine-breakpoint-xs) {
+    flex-direction: column;
+  }
 }
