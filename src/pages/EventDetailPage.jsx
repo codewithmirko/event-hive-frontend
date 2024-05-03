@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Container, Title, Text, Image, Badge, Card, Group, Button } from '@mantine/core';
 import { EventContext } from '../context/EventContext';
 import { AuthContext } from '../context/auth.context';  // Assuming you have a context to manage authentication
+import Comments from '../components/Comments';
 
 const EventDetailPage = () => {
     const { eventId } = useParams();
@@ -92,6 +93,7 @@ const EventDetailPage = () => {
                     {isUserAttending ? 'Leave Event' : 'Join Event'}  
                 </Button>
             </Card>
+            <Comments eventId={event._id} />
         </Container>
     );
 };
