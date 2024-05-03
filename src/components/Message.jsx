@@ -13,7 +13,8 @@ function Message({ comment, isOwner, onDelete }) {
 
   return (
     <>
-      <Group position={messageAlignment} spacing="xs" style={{ marginBottom: 10 }}>
+      <Group position={messageAlignment} spacing="xs" style={{ marginBottom: 10, display: 'flex',
+    flexDirection: 'column', alignItems: messageAlignment }}>
         <Box
           style={{
             backgroundColor: bubbleColor,
