@@ -7,10 +7,9 @@ function Message({ comment, isOwner, onDelete }) {
   const bubbleColor = isOwner ? '#d1eaff' : '#f0f0f0';
 
   const handleDelete = () => {
-    onDelete(comment._id); // Make sure to use the correct identifier property
+    onDelete(comment._id);
     setShowConfirm(false); // Hide the modal after confirming
   };
-
 
   return (
     <>
@@ -21,11 +20,18 @@ function Message({ comment, isOwner, onDelete }) {
             padding: '8px 12px',
             borderRadius: '16px',
             maxWidth: '80%',
-            margin: isOwner ? '0 0 0 auto' : '0 auto 0 0', // Align the message box to the left or right
+            display: 'flex', // Ensure the avatar and text are aligned nicely
+            alignItems: 'center', // Align items vertically
           }}
         >
-          <div style={{ position: 'relative' }}>
-            <Text size="sm">{comment.commenter.username}</Text> {/* Assuming commenter is an object with a username */}
+          <Avatar
+            src={`https://api.multiavatar.com/${encodeURIComponent(comment.commenter.username)}.png`}
+            alt={`${comment.commenter.username}'s avatar`}
+            size="md" // Adjust size as needed
+            style={{ marginRight: '8px' }} // Spacing between avatar and text
+          />
+          <div style={{ flex: 1, position: 'relative' }}> {/* Ensure text fills remaining space */}
+            <Text size="sm">{comment.commenter.username}</Text>
             {isOwner && (
               <Button
                 size="xs"
@@ -40,7 +46,7 @@ function Message({ comment, isOwner, onDelete }) {
               Posted at {new Date(comment.createdAt).toLocaleTimeString()}
             </Text>
             <Text size="sm">
-              {comment.commentText} {/* Ensure text field matches API */}
+              {comment.commentText}
             </Text>
           </div>
         </Box>
