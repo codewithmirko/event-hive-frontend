@@ -1,22 +1,59 @@
 .card {
-    background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-7));
+  position: relative;
+  background-color: var(--mantine-color-body);
 }
 
-.section {
-    border-bottom: rem(1px) solid light-dark(var(--mantine-color-gray-3), var(--mantine-color-dark-4));
-    padding-left: var(--mantine-spacing-md);
-    padding-right: var(--mantine-spacing-md);
-    padding-bottom: var(--mantine-spacing-md);
+.rating {
+  position: absolute;
+  top: var(--mantine-spacing-xs);
+  right: rem(12px);
+  pointer-events: none;
 }
 
-.like {
-    color: var(--mantine-color-red-6);
-    width: rem(20px);
-    height: rem(20px);
+.title {
+  display: block;
+  margin-top: var(--mantine-spacing-md);
+  margin-bottom: rem(5px);
 }
 
-.label {
-    text-transform: uppercase;
-    font-size: var(--mantine-font-size-xs);
-    font-weight: 700;
+.action {
+  background-color: light-dark(
+    var(--mantine-color-gray-0),
+    var(--mantine-color-dark-5)
+  );
+
+  @mixin hover {
+    background-color: light-dark(
+      var(--mantine-color-gray-1),
+      var(--mantine-color-dark-6)
+    );
+  }
+}
+
+.footer {
+  margin-top: var(--mantine-spacing-md);
+}
+
+.cardContainer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 15px;
+  max-width: 80%;
+}
+
+.cardBlock {
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.card {
+  min-width: 15%;
+  max-width: 30%;
+}
+
+.searchBar {
+  width: 50%;
 }
