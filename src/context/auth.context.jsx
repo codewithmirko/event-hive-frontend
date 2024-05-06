@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect, createContext  } from "react";
 import axios from "axios";
-const API_URL = "http://localhost:5005";
-
-const AuthContext = React.createContext();
 import CustomNotification from "../components/CustomNotification";
+
+
+const API_URL = "http://localhost:5005";
+const AuthContext = createContext();
+
 
 function AuthProviderWrapper(props) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -18,8 +20,8 @@ function AuthProviderWrapper(props) {
     //  <==  ADD
     // Get the stored token from the localStorage
     const storedToken = localStorage.getItem("authToken");
-    console.log(`I am the storedToken:`, storedToken);
-    console.log("I am the authenticateUser function");
+    // console.log(`I am the storedToken:`, storedToken);
+    // console.log("I am the authenticateUser function");
 
     // If the token exists in the localStorage
     if (storedToken) {
@@ -28,28 +30,46 @@ function AuthProviderWrapper(props) {
         .get(`${API_URL}/auth/verify`, {
           headers: { Authorization: `Bearer ${storedToken}` },
         })
-        .then((response) => {
+        .then(() => {
           // If the server verifies that the JWT token is valid
-          const user = response.data.user;
           // Update state variables
           setIsLoggedIn(true);
           setIsLoading(false);
-          setUser(user);
+          fetchUserDetails(storedToken);
         })
-        .catch((error) => {
+        .catch(error => {
           // If the server sends an error response (invalid token)
           // Update state variables
-          setIsLoggedIn(false);
-          setIsLoading(false);
-          setUser(null);
+          logOutUser("error", "Session expired, please log in again.");
+          console.error('Error verifying token:', error);
         });
     } else {
       // If the token is not available (or is removed)
-      setIsLoggedIn(false);
-      setIsLoading(false);
-      setUser(null);
+      logOutUser("error", "Failed to fetch user details, logging out for security.");
     }
   };
+
+  const fetchUserDetails = (token) => {
+    axios.get(`${API_URL}/auth/user-details`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    .then(response => {
+      
+      const user = response.data.user;
+      console.log('FETCHING USER ', user)
+      setUser(user);
+      setIsLoggedIn(true);
+      setIsLoading(false)
+    })
+    .catch(error => {
+      console.error('Error fetching user details:', error);
+      logOutUser("error", "Failed to fetch user details, logging out for security.");
+    })
+    .finally(() => {
+      setIsLoading(false);
+    });
+  };
+
 
   const removeToken = () => {
     // <== ADD
@@ -57,18 +77,18 @@ function AuthProviderWrapper(props) {
     localStorage.removeItem("authToken");
   };
 
-  const logOutUser = () => {
-    console.log("I am the logOuUser function");
-    // <== ADD
-    // To log out the user, remove the token
-    removeToken();
-    // and update the state variables
-    CustomNotification({
-      type: "success",
-      message: `You've been logged out`,
-    });
-    authenticateUser();
-  };
+const logOutUser = (notificationType = "success", notificationMessage = "You've been logged out.") => {
+  removeToken();
+  console.log('loggingout')
+  setIsLoggedIn(false);
+  setUser(null);
+  setIsLoading(false);
+  CustomNotification({
+    type: notificationType,
+    message: notificationMessage
+  });
+};
+
 
   useEffect(() => {
     authenticateUser();
