@@ -34,7 +34,7 @@
   margin-top: var(--mantine-spacing-md);
 }
 
-.cardContainer {
+/* .cardContainer {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -56,4 +56,4 @@
 
 .searchBar {
   width: 50%;
-}
+} */

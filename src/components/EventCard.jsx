@@ -12,6 +12,7 @@ import {
   rem,
 } from "@mantine/core";
 import classes from "../styles/EventCard.module.css";
+import { Link } from "react-router-dom";
 
 function EventCard({
   eventName,
@@ -20,24 +21,20 @@ function EventCard({
   location,
   date,
   organizer,
-  avatar,
   eventType,
   eventId,
 }) {
   const theme = useMantineTheme();
-  const linkProps = {
-    href: `/event/${eventId}`,
-  };
 
   const defaultImageSrc =
     "https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg";
 
   return (
-    <Card withBorder radius="md" className={classes.card}>
+    <Card withBorder radius="md">
       <Card.Section>
-        <a {...linkProps}>
+        <Link to={`/event/${eventId}`}>
           <Image src={photo || defaultImageSrc} height={180} />
-        </a>
+        </Link>
       </Card.Section>
 
       <Badge
@@ -48,7 +45,7 @@ function EventCard({
         {eventType}
       </Badge>
 
-      <Text className={classes.title} fw={500} component="a" {...linkProps}>
+      <Text className={classes.title} fw={500}>
         {eventName}
       </Text>
 
@@ -61,7 +58,14 @@ function EventCard({
 
       <Group justify="space-between" className={classes.footer}>
         <Center>
-          <Avatar src={avatar} size={24} radius="xl" mr="xs" />
+          <Avatar
+            src={`https://api.multiavatar.com/${encodeURIComponent(
+              organizer
+            )}.png`}
+            size={24}
+            radius="xl"
+            mr="xs"
+          />
           <Text fz="sm" inline>
             {organizer}
           </Text>
