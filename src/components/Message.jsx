@@ -1,7 +1,7 @@
 import { Text, Avatar, Group, Button, Box, Modal } from '@mantine/core';
 import { useState } from 'react';
 
-function Message({ comment, isOwner, onDelete }) {
+function Message({ comment, isOwner, onDelete, isAdmin }) {
   const [showConfirm, setShowConfirm] = useState(false);
   const messageAlignment = isOwner ? 'flex-end' : 'flex-start';
   const bubbleColor = isOwner ? '#d1eaff' : '#f0f0f0';
@@ -33,7 +33,7 @@ function Message({ comment, isOwner, onDelete }) {
           />
           <div style={{ flex: 1, position: 'relative' }}> {/* Ensure text fills remaining space */}
             <Text size="sm">{comment.commenter.username}</Text>
-            {isOwner && (
+            {(isOwner || isAdmin) &&  (
               <Button
                 size="xs"
                 style={{ position: 'absolute', top: 0, right: 0, padding: '0 5px' }}

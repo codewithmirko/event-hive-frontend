@@ -42,6 +42,7 @@ function Comments({ eventId }) {
 
   async function handleCommentAPI(method, endpoint, data = {}) {
     try {
+      console.log('DATA inside comment handler', data)
       const response = await axios({
         method: method,
         url: `${BACKEND_URL}/api/comments${endpoint}`,
@@ -117,7 +118,7 @@ function Comments({ eventId }) {
     }
 
     try {
-      await handleCommentAPI("delete", `/${commentId}`);
+      await handleCommentAPI("delete", `/${commentId}`,user);
       fetchComments(); // Re-fetch comments to ensure the state matches the database after deletion
       showNotification({
         title: "Success",
@@ -142,6 +143,7 @@ function Comments({ eventId }) {
             comment={comment}
             isOwner={user?._id === comment.commenter?._id}
             onDelete={() => deleteComment(comment._id)}
+            isAdmin={user?.userType==='admin'}
           />
         ))
       ) : (
