@@ -44,10 +44,11 @@ function EventCard({
       >
         {eventType}
       </Badge>
-
-      <Text className={classes.title} fw={500}>
-        {eventName}
-      </Text>
+      <Link to={`/event/${eventId}`}>
+        <Text className={classes.title} fw={500}>
+          {eventName}
+        </Text>
+      </Link>
 
       <Text fz="sm" c="dimmed" lineClamp={4}>
         {description}
