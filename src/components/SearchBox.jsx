@@ -1,13 +1,29 @@
-import { Input } from "@mantine/core";
+import { useState } from "react";
+import styles from "../styles/SearchBox.module.css";
 
-const SearchBox = () => {
+function SearchBox({ searchHandler }) {
+  const [string, setString] = useState("");
+
+  const handleSearch = (e) => {
+    setString(e.target.value);
+    searchHandler(e.target.value);
+  };
+
   return (
-    <>
-      <Input component="button" pointer>
-        <Input.Placeholder>Search Events</Input.Placeholder>
-      </Input>
-    </>
+    <div className={styles.searchContainer}>
+      <label htmlFor="searchInput" className={styles.searchLabel}>
+        Search:
+      </label>
+      <input
+        type="text"
+        id="searchInput"
+        className={styles.searchInput}
+        value={string}
+        onChange={handleSearch}
+        placeholder="Search Event"
+      />
+    </div>
   );
-};
+}
 
 export default SearchBox;
