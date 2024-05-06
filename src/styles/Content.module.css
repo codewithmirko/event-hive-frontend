@@ -1,4 +1,4 @@
-* {
+/* * {
   margin: 0;
   padding: 0;
 }
@@ -13,7 +13,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
-  padding: 2rem;
+  padding: 1rem;
 
   width: 100%;
   top: 70%;
@@ -97,3 +97,6 @@
   z-index: 10;
   transform: translateY(-50%);
 }
+
+.card {
+} */

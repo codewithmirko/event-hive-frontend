@@ -1,0 +1,19 @@
+.searchContainer {
+  display: flex;
+  align-items: center;
+  margin: 20px;
+}
+
+.searchLabel {
+  font-weight: bolder;
+  border: 1px solid #afafaf; /* Add border */
+  border-radius: 15px 0 0 15px; /* Add rounded corners */
+  padding: 10px;
+}
+
+.searchInput {
+  flex: 1; /* Take remaining space */
+  padding: 10px; /* Add padding for better appearance */
+  border: 1px solid #afafaf; /* Add border */
+  border-radius: 0 15px 15px 0; /* Add rounded corners */
+}
