@@ -34,7 +34,12 @@
   margin-top: var(--mantine-spacing-md);
 }
 
-.cardContainer {
+a {
+  text-decoration: none;
+  color: black;
+}
+
+/* .cardContainer {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -56,4 +61,4 @@
 
 .searchBar {
   width: 50%;
-}
+} */
