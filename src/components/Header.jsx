@@ -1,80 +1,81 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { MantineLogo } from "@mantinex/mantine-logo";
-import SignButtons from "./SignButtons";
+import { Box, Button, Group, Divider, Drawer, ScrollArea, Image, LoadingOverlay } from "@mantine/core";
+import { Burger } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import {
-  Box,
-  Button,
-  rem,
-  Burger,
-  Group,
-  Divider,
-  Drawer,
-  ScrollArea,
-  Image,
-} from "@mantine/core";
-import { useContext } from "react";
 import { AuthContext } from "../context/auth.context";
+import SignButtons from "./SignButtons";
 import classes from "../styles/Header.module.css";
 import logo from "../assets/logo-text-full-res.png";
 
 function Header() {
-  const { isLoggedIn, logOutUser } = useContext(AuthContext);
-  const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
-    useDisclosure(false);
+  const { isLoggedIn, isLoading, logOutUser } = useContext(AuthContext);
+  const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
+
+  const handleLogout = () => {
+    closeDrawer();
+    logOutUser();
+  };
 
   return (
     <Box pb={0}>
-      <header className={classes.header}>
-        <Link to="/" className={`${classes.link} ${classes.logo}`}>
-          <Image src={logo} h={35} w="auto" />
-        </Link>
+      <LoadingOverlay visible={isLoading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
+      {!isLoading && (
+        <header className={classes.header}>
+          <Link to="/" className={`${classes.link} ${classes.logo}`}>
+            <Image src={logo} height={35} width="auto" />
+          </Link>
 
-        <Group className={classes.buttons} visibleFrom="sm">
-          {isLoggedIn ? (
-            <Button variant="outline" color="red" onClick={logOutUser}>
-              Logout
-            </Button>
-          ) : (
-            <SignButtons />
-          )}
-        </Group>
-
-        <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="sm" />
-      </header>
-
-      <Drawer
-        opened={drawerOpened}
-        onClose={closeDrawer}
-        size="100%"
-        padding="md"
-        title="Navigation"
-        hiddenFrom="sm"
-        zIndex={1000000}
-      >
-        <ScrollArea h={`calc(100vh - ${rem(80)})`} mx="-md">
-          <Divider my="sm" />
-
-          <a href="#" className={classes.link}>
-            Home
-          </a>
-
-          <Divider my="sm" />
-
-          {!isLoggedIn ? (
-            <Group justify="center" grow pb="xl" px="md">
+          <Group className={classes.buttons} visibleFrom="sm">
+            {!isLoggedIn ? (
               <SignButtons />
-            </Group>
-          ) : (
-            <Group justify="center" grow pb="xl" px="md">
-              <Button variant="outline" color="red" onClick={logOutUser}>
-                Logout
-              </Button>
-            </Group>
-          )}
-        </ScrollArea>
-      </Drawer>
+            ) : (
+              <>
+                <Link to="/profile" className={classes.link}>
+                  Profile
+                </Link>
+                <Button variant="outline" color="red" onClick={handleLogout}>
+                  Logout
+                </Button>
+              </>
+            )}
+          </Group>
+
+          <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="sm" />
+
+          <Drawer
+            opened={drawerOpened}
+            onClose={closeDrawer}
+            size="100%"
+            padding="md"
+            title="Navigation"
+            hiddenFrom="sm"
+            // zIndex={1000000}
+          >
+            <ScrollArea style={{ height: `calc(100vh - ${80}px)` }} mx="-md">
+              <Divider my="sm" />
+              <Link to="/" className={classes.link} onClick={closeDrawer}>
+                Home
+              </Link>
+              <Divider my="sm" />
+              {!isLoggedIn ? (
+                <Group justify="center" grow pb="xl" px="md">
+                  <SignButtons />
+                </Group>
+              ) : (
+                <Group justify="center" grow pb="xl" px="md">
+                  <Link to="/profile" className={classes.link} onClick={closeDrawer}>
+                    Profile
+                  </Link>
+                  <Button variant="outline" color="red" onClick={handleLogout}>
+                    Logout
+                  </Button>
+                </Group>
+              )}
+            </ScrollArea>
+          </Drawer>
+        </header>
+      )}
     </Box>
   );
 }

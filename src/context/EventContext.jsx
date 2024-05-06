@@ -29,8 +29,8 @@ const EventProvider = ({ children }) => {
                     "Cache-Control": "no-cache"
                 },
             });
-            const allEvents = response.data;
-            console.log(allEvents[0])
+            // const allEvents = response.data;
+            // // console.log(allEvents[0])
             setEvents(response.data);
         } catch (error) {
             console.error("Failed to fetch events:", error);

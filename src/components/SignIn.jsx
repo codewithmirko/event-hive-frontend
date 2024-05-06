@@ -37,7 +37,7 @@ const SignIn = ({ opened, toggleSignUp, close }) => {
     axios
       .post(`${API_URL}/auth/login`, values)
       .then((response) => {
-        console.log("Sign In successful", response);
+        // console.log("Sign In successful", response);
         storeToken(response.data.token);
         authenticateUser();
         CustomNotification({
