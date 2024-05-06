@@ -19,7 +19,7 @@ import CustomNotification from "./CustomNotification";  // Ensure this path is c
 const API_URL = "http://localhost:5005";
 
 const SignIn = ({ opened, toggleSignUp, close }) => {
-  const { storeToken, authenticateUser } = useContext(AuthContext);
+  const { storeToken, authenticateUser,setIsLoading, isLoading } = useContext(AuthContext);
 
   const form = useForm({
     initialValues: {
@@ -34,6 +34,7 @@ const SignIn = ({ opened, toggleSignUp, close }) => {
   });
 
   const handleSignInSubmit = (values) => {
+    setIsLoading(true);
     axios
       .post(`${API_URL}/auth/login`, values)
       .then((response) => {
@@ -52,6 +53,9 @@ const SignIn = ({ opened, toggleSignUp, close }) => {
           message: error.response ? error.response.data.message : 'Failed to connect to the server'
         });
         console.log(error);
+      })
+      .finally(() => {
+        setIsLoading(false);  // Reset loading state regardless of the outcome
       });
   };
 
@@ -61,7 +65,7 @@ const SignIn = ({ opened, toggleSignUp, close }) => {
         <Title align="center" className={classes.title}>
           Sign In
         </Title>
-        <Text color="dimmed" size="sm" align="center" mt={5}>
+        <Text c="dimmed" size="sm" align="center" mt={5}>
           Do not have an account yet?{" "}
           <Button variant="subtle" size="sm" onClick={() => {
             close();
@@ -90,7 +94,7 @@ const SignIn = ({ opened, toggleSignUp, close }) => {
                 Forgot password?
               </Button>
             </Group>
-            <Button type="submit" fullWidth mt="xl" loading={form.isSubmitting}>
+            <Button type="submit" fullWidth mt="xl" loading={form.isSubmitting} disabled={form.isSubmitting} >
               Sign in
             </Button>
           </Paper>

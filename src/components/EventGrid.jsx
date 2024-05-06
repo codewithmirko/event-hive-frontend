@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import {
   SimpleGrid,
   Card,
@@ -6,14 +6,14 @@ import {
   Text,
   Container,
   AspectRatio,
+  Title,
+  Paper,
 } from "@mantine/core";
 import classes from "../styles/EventGrid.module.css";
 import EventCard from "./EventCard";
-import { EventContext } from "../context/EventContext";
 import SearchBox from "./SearchBox";
 
-function EventGrid() {
-  const { events } = useContext(EventContext);
+function EventGrid({ events, title='Events' }) {
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredEvents = events.filter((event) =>
@@ -41,18 +41,26 @@ function EventGrid() {
 
   return (
     <Container py="xl">
-      <div style={{ marginBottom: "20px" }}>
-        <SearchBox searchHandler={handleSearch} />
-      </div>
+      <Paper shadow="sm" radius="md" p="md" withBorder style={{ marginBottom: "20px" }}>
+        <Title order={2} align="center">{title}</Title>
+        <div style={{ marginBottom: "20px" }}>
+          <SearchBox searchHandler={handleSearch} />
+        </div>
+      
       {eventCards.length > 0 ? (
-        <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="lg">
-          {eventCards}
-        </SimpleGrid>
+<div style={{ display: 'flex', justifyContent: 'center' }}>
+    <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="lg" >
+        {eventCards}
+    </SimpleGrid>
+</div>
+
+        
       ) : (
         <Text align="center" size="lg" mt="lg">
           No events found matching your search criteria.
         </Text>
       )}
+      </Paper>
     </Container>
   );
 }

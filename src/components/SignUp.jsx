@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import axios from 'axios';
 import {
   TextInput,
@@ -15,10 +15,12 @@ import { useForm } from '@mantine/form';
 import classes from "../styles/AuthenticationTitle.module.css";
 import CustomNotification from "./CustomNotification";
 import { useState } from 'react';
+import { AuthContext } from '../context/auth.context';
 
 const API_URL = "http://localhost:5005";
 
 const SignUp = ({ opened, toggleSignIn, close }) => {
+  const { setIsLoading, isLoading } = useContext(AuthContext);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm({
@@ -38,11 +40,12 @@ const SignUp = ({ opened, toggleSignIn, close }) => {
   });
 
   const handleSignUpSubmit = (values) => {
+    setIsLoading(true);
     setIsSubmitting(true);
     const { userName, email, password } = values;
 
     axios.post(`${API_URL}/auth/signup`, { username: userName, email, password })
-      .then((response) => {
+      .then(() => {
         CustomNotification({
           type: 'success',
           message: 'Account created successfully!'
@@ -55,14 +58,17 @@ const SignUp = ({ opened, toggleSignIn, close }) => {
           message: error.response ? error.response.data.message : 'Failed to connect to the server'
         });
       })
-      .finally(() => setIsSubmitting(false));
+      .finally(() => {
+        setIsSubmitting(false);
+        setIsLoading(false);  // Reset loading state regardless of the outcome
+      });
   };
 
   return (
     <Modal opened={opened} onClose={close} title="" size="auto">
       <Container size={420} my={40}>
         <Title align="center" className={classes.title}>Sign Up</Title>
-        <Text color="dimmed" size="sm" align="center" mt={5}>
+        <Text c="dimmed" size="sm" align="center" mt={5}>
           Already have an account?{" "}
           <Button
             variant="subtle"
@@ -104,7 +110,7 @@ const SignUp = ({ opened, toggleSignIn, close }) => {
               mt="md"
             />
             <Group position="right" mt="lg">
-              <Button type="submit" fullWidth mt="xl">
+              <Button type="submit" fullWidth mt="xl" loading={form.isSubmitting}>
                 Sign up
               </Button>
             </Group>

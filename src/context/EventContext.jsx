@@ -22,16 +22,15 @@ const EventProvider = ({ children }) => {
         headers: { 'Authorization': getToken(), 'Content-Type': 'application/json' }
     });
 
-    const getDataEvent = async () => {
+    // Updated to accept optional parameters for filtering and setting state
+    const getDataEvent = async (urlPath = '', setState = setEvents) => {
         try {
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/events`, {
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/events${urlPath}`, {
                 headers: {
                     "Cache-Control": "no-cache"
                 },
             });
-            // const allEvents = response.data;
-            // // console.log(allEvents[0])
-            setEvents(response.data);
+            setState(response.data);
         } catch (error) {
             console.error("Failed to fetch events:", error);
         }
@@ -125,7 +124,7 @@ const EventProvider = ({ children }) => {
     }, []);
 
     return (
-        <EventContext.Provider value={{ events, updateEvent, deleteEvent, addEvent, updateEventParticipation }}>
+        <EventContext.Provider value={{ events, getDataEvent, updateEvent, deleteEvent, addEvent, updateEventParticipation }}>
             {children}
         </EventContext.Provider>
     );

@@ -96,6 +96,7 @@ const logOutUser = (notificationType = "success", notificationMessage = "You've 
         isLoggedIn,
         isLoading,
         user,
+        setIsLoading,
         storeToken,
         authenticateUser,
         logOutUser,
