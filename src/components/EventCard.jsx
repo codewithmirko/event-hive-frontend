@@ -1,4 +1,5 @@
 import { IconBookmark, IconHeart, IconShare } from "@tabler/icons-react";
+import { useState, useContext } from "react";
 import {
   Card,
   Image,
@@ -14,6 +15,7 @@ import {
 import classes from "../styles/EventCard.module.css";
 import { Link } from "react-router-dom";
 
+
 function EventCard({
   eventName,
   description,
@@ -25,9 +27,24 @@ function EventCard({
   eventId,
 }) {
   const theme = useMantineTheme();
+  const [favoritedEvents, setFavoritedEvents] = useState(new Set());
+
 
   const defaultImageSrc =
     "https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg";
+
+  const toggleFavorite = (eventId) => {
+    setFavoritedEvents((prev) => {
+      const newFavs = new Set(prev);
+      if (newFavs.has(eventId)) {
+        newFavs.delete(eventId);
+      } else {
+        newFavs.add(eventId);
+      }
+      return newFavs;
+    });
+  };
+
 
   return (
     <Card withBorder radius="md">
@@ -77,6 +94,12 @@ function EventCard({
             <IconHeart
               style={{ width: rem(16), height: rem(16) }}
               color={theme.colors.red[6]}
+              fill={favoritedEvents.has(eventId) ? "red" : "none"}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleFavorite(eventId);
+              }}
             />
           </ActionIcon>
         </Group>
