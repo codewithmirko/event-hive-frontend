@@ -66,6 +66,33 @@ function AuthProviderWrapper(props) {
       });
   };
 
+
+  const updateUserProfile = async (updatedData) => {
+    const storedToken = localStorage.getItem("authToken");
+    try {
+      setIsLoading(true);
+      const response = await axios.patch(`${API_URL}/auth/update-profile`, updatedData, {
+        headers: { Authorization: `Bearer ${storedToken}` }
+      });
+      console.log(response.data.user)
+      setUser(response.data.user); // Assuming the response includes the updated user
+      CustomNotification({
+        type: "success",
+        message: "Profile updated successfully!",
+      });
+    } catch (error) {
+      console.error("Error updating user profile:", error);
+      CustomNotification({
+        type: "error",
+        message: "Failed to update profile.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+
+
   const removeToken = () => {
     // <== ADD
     // Upon logout, remove the token from the localStorage
@@ -98,10 +125,12 @@ function AuthProviderWrapper(props) {
         isLoggedIn,
         isLoading,
         user,
+        updateUserProfile,
         setIsLoading,
         storeToken,
         authenticateUser,
         logOutUser,
+        fetchUserDetails
       }}
     >
       {props.children}

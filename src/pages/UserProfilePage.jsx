@@ -7,12 +7,12 @@ import { EventContext } from '../context/EventContext';
 import EventGrid from "../components/EventGrid.jsx";
 
 const UserProfilePage = () => {
-    const { user, isLoading } = useContext(AuthContext);
+    const { user, isLoading, setIsLoading, fetchUserDetails, updateUserProfile } = useContext(AuthContext);
     const { getDataEvent } = useContext(EventContext)
     const [editMode, setEditMode] = useState(false);
     const [joinedEvents, setJoinedEvents] = useState([]);
     const [organizedEvents, setOrganizedEvents] = useState([]);
-    const [favoritedEvents, setFavoritedEvents] = useState([]);
+
 
     useEffect(() => {
         // Fetch initial 15 events (make sure your API supports this limit query)
@@ -26,30 +26,19 @@ const UserProfilePage = () => {
     }, [user]);
 
 
-    const handleSaveChanges = (values) => {
+    const handleSaveChanges = async (values) => {
         console.log('Form values:', values);
-        // Here, implement the logic to send data to the server
-        // After successful update, you might want to call a method to refresh user info
-        setEditMode(false);
-    };
+        setIsLoading(true)
+        try {
+            await updateUserProfile(values); // Send updated profile data
+            setEditMode(false);
+          } catch (error) {
+            console.error('Error updating profile:', error);
+          } finally {
+            setIsLoading(false);
+          }
+        };
 
-    // TEMPORARY FUNCTION
-    const EventsList = ({ title, events }) => (
-        <>
-            <Title order={4}>{title}</Title>
-            {events.length ? (
-                events.map(event => (
-                    <Card key={event._id}>
-                        <Text>{event.eventname}</Text>
-                    </Card>
-                ))
-            ) : (
-                <>
-                <div>No events found.</div>
-                </>
-            )}
-        </>
-    );
 
 
     if (isLoading) {
@@ -68,7 +57,7 @@ const UserProfilePage = () => {
             </Container>
         );
     }
-
+    // console.log(joinedEvents,organizedEvents,user?.favoritedEvents )
     return (
         <Container size="md" mt={50}>
             <Title align="center">User Profile</Title>
