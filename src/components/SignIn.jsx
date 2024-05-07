@@ -14,22 +14,24 @@ import {
 import { useForm } from "@mantine/form"; // USING THIS so we don't use states and .. all the extra stuff
 import classes from "../styles/AuthenticationTitle.module.css";
 import { AuthContext } from "../context/auth.context";
-import CustomNotification from "./CustomNotification";  // Ensure this path is correct
+import CustomNotification from "./CustomNotification"; // Ensure this path is correct
 
-const API_URL = "http://localhost:5005";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const SignIn = ({ opened, toggleSignUp, close }) => {
-  const { storeToken, authenticateUser,setIsLoading, isLoading } = useContext(AuthContext);
+  const { storeToken, authenticateUser, setIsLoading, isLoading } =
+    useContext(AuthContext);
 
   const form = useForm({
     initialValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
 
     validate: {
-      email: (value) => (/^\S+@\S+\.\S+$/.test(value) ? null : 'Invalid email'),
-      password: (value) => (value.length >= 1 ? null : 'Password must be at least 1 character'),
+      email: (value) => (/^\S+@\S+\.\S+$/.test(value) ? null : "Invalid email"),
+      password: (value) =>
+        value.length >= 1 ? null : "Password must be at least 1 character",
     },
   });
 
@@ -42,20 +44,22 @@ const SignIn = ({ opened, toggleSignUp, close }) => {
         storeToken(response.data.token);
         authenticateUser();
         CustomNotification({
-          type: 'success',
-          message: `Welcome back`
+          type: "success",
+          message: `Welcome back`,
         });
         close();
       })
       .catch((error) => {
         CustomNotification({
-          type: 'error',
-          message: error.response ? error.response.data.message : 'Failed to connect to the server'
+          type: "error",
+          message: error.response
+            ? error.response.data.message
+            : "Failed to connect to the server",
         });
         console.log(error);
       })
       .finally(() => {
-        setIsLoading(false);  // Reset loading state regardless of the outcome
+        setIsLoading(false); // Reset loading state regardless of the outcome
       });
   };
 
@@ -67,10 +71,14 @@ const SignIn = ({ opened, toggleSignUp, close }) => {
         </Title>
         <Text c="dimmed" size="sm" align="center" mt={5}>
           Do not have an account yet?{" "}
-          <Button variant="subtle" size="sm" onClick={() => {
-            close();
-            toggleSignUp();
-          }}>
+          <Button
+            variant="subtle"
+            size="sm"
+            onClick={() => {
+              close();
+              toggleSignUp();
+            }}
+          >
             Sign up instead
           </Button>
         </Text>
@@ -79,13 +87,13 @@ const SignIn = ({ opened, toggleSignUp, close }) => {
             <TextInput
               label="Email"
               placeholder="john@eventhive.com"
-              {...form.getInputProps('email')}
+              {...form.getInputProps("email")}
               required
             />
             <PasswordInput
               label="Password"
               placeholder="Your password"
-              {...form.getInputProps('password')}
+              {...form.getInputProps("password")}
               required
               mt="md"
             />
@@ -94,7 +102,13 @@ const SignIn = ({ opened, toggleSignUp, close }) => {
                 Forgot password?
               </Button>
             </Group>
-            <Button type="submit" fullWidth mt="xl" loading={form.isSubmitting} disabled={form.isSubmitting} >
+            <Button
+              type="submit"
+              fullWidth
+              mt="xl"
+              loading={form.isSubmitting}
+              disabled={form.isSubmitting}
+            >
               Sign in
             </Button>
           </Paper>
