@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import axios from 'axios';
+import React, { useContext } from "react";
+import axios from "axios";
 import {
   TextInput,
   PasswordInput,
@@ -10,14 +10,14 @@ import {
   Group,
   Button,
   Modal,
-} from '@mantine/core';
-import { useForm } from '@mantine/form';
+} from "@mantine/core";
+import { useForm } from "@mantine/form";
 import classes from "../styles/AuthenticationTitle.module.css";
 import CustomNotification from "./CustomNotification";
-import { useState } from 'react';
-import { AuthContext } from '../context/auth.context';
+import { useState } from "react";
+import { AuthContext } from "../context/auth.context";
 
-const API_URL = "http://localhost:5005";
+const API_URL = import.meta.env.VITE_API_URL;
 
 const SignUp = ({ opened, toggleSignIn, close }) => {
   const { setIsLoading, isLoading } = useContext(AuthContext);
@@ -25,17 +25,19 @@ const SignUp = ({ opened, toggleSignIn, close }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm({
     initialValues: {
-      userName: '',
-      email: '',
-      password: '',
-      confirmPassword: ''
+      userName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
     },
 
     validate: {
-      userName: (value) => (value ? null : 'Username is required'),
-      email: (value) => (/^\S+@\S+\.\S+$/.test(value) ? null : 'Invalid email'),
-      password: (value) => (value.length >= 1 ? null : 'Password must be at least 1 character'),
-      confirmPassword: (value, values) => (value === values.password ? null : 'Passwords do not match')
+      userName: (value) => (value ? null : "Username is required"),
+      email: (value) => (/^\S+@\S+\.\S+$/.test(value) ? null : "Invalid email"),
+      password: (value) =>
+        value.length >= 1 ? null : "Password must be at least 1 character",
+      confirmPassword: (value, values) =>
+        value === values.password ? null : "Passwords do not match",
     },
   });
 
@@ -44,30 +46,35 @@ const SignUp = ({ opened, toggleSignIn, close }) => {
     setIsSubmitting(true);
     const { userName, email, password } = values;
 
-    axios.post(`${API_URL}/auth/signup`, { username: userName, email, password })
+    axios
+      .post(`${API_URL}/auth/signup`, { username: userName, email, password })
       .then(() => {
         CustomNotification({
-          type: 'success',
-          message: 'Account created successfully!'
+          type: "success",
+          message: "Account created successfully!",
         });
         close();
       })
       .catch((error) => {
         CustomNotification({
-          type: 'error',
-          message: error.response ? error.response.data.message : 'Failed to connect to the server'
+          type: "error",
+          message: error.response
+            ? error.response.data.message
+            : "Failed to connect to the server",
         });
       })
       .finally(() => {
         setIsSubmitting(false);
-        setIsLoading(false);  // Reset loading state regardless of the outcome
+        setIsLoading(false); // Reset loading state regardless of the outcome
       });
   };
 
   return (
     <Modal opened={opened} onClose={close} title="" size="auto">
       <Container size={420} my={40}>
-        <Title align="center" className={classes.title}>Sign Up</Title>
+        <Title align="center" className={classes.title}>
+          Sign Up
+        </Title>
         <Text c="dimmed" size="sm" align="center" mt={5}>
           Already have an account?{" "}
           <Button
@@ -86,31 +93,36 @@ const SignUp = ({ opened, toggleSignIn, close }) => {
             <TextInput
               label="Username"
               placeholder="coolusername"
-              {...form.getInputProps('userName')}
+              {...form.getInputProps("userName")}
               required
             />
             <TextInput
               label="Email"
               placeholder="john@eventhive.com"
-              {...form.getInputProps('email')}
+              {...form.getInputProps("email")}
               required
             />
             <PasswordInput
               label="Password"
               placeholder="Your password"
-              {...form.getInputProps('password')}
+              {...form.getInputProps("password")}
               required
               mt="md"
             />
             <PasswordInput
               label="Confirm Password"
               placeholder="Confirm password"
-              {...form.getInputProps('confirmPassword')}
+              {...form.getInputProps("confirmPassword")}
               required
               mt="md"
             />
             <Group position="right" mt="lg">
-              <Button type="submit" fullWidth mt="xl" loading={form.isSubmitting}>
+              <Button
+                type="submit"
+                fullWidth
+                mt="xl"
+                loading={form.isSubmitting}
+              >
                 Sign up
               </Button>
             </Group>
