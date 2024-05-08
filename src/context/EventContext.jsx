@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { showNotification } from "@mantine/notifications";
+import CustomNotification from "../components/CustomNotification";
 import axios from "axios";
 
 const EventContext = createContext();
@@ -115,20 +115,18 @@ const EventProvider = ({ children }) => {
           updatedEvents[index] = { ...prevEvents[index], ...response.data };
           return updatedEvents;
         });
-        showNotification({
-          title: "Success",
+        CustomNotification({
+          type: "success",
           message: messageSuccess,
-          color: "green",
         });
       } else {
         throw new Error(`No data returned from ${endpoint} event API`);
       }
     } catch (error) {
       console.error(`Error ${actionType} event:`, error);
-      showNotification({
-        title: "Error",
+      CustomNotification({
+        type: "success",
         message: messageError,
-        color: "red",
       });
     }
   };
