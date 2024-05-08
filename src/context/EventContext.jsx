@@ -27,28 +27,25 @@ const EventProvider = ({ children }) => {
 
   // Updated to accept optional parameters for filtering and setting state
 // Updated to accept currentPage for pagination
-const getDataEvent = async (filters = {}, page = 1) => {
-  const { organizer, attendee, eventType } = filters;
-  const offset = (page - 1) * pageSize;
-  const queryParams = new URLSearchParams({
-    limit: pageSize,
-    offset,
-    ...(organizer && { organizer }),
-    ...(attendee && { attendee }),
-    ...(eventType && { eventType })
-  });
-
+const getDataEvent = async (urlPath = "", setState = setEvents, setTotal = setTotalEvents) => {
   try {
-    const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/events?${queryParams.toString()}`, {
-      headers: { "Cache-Control": "no-cache" }
-    });
-    console.log(response.data.total)
-    setEvents(response.data.events);
-    setTotalEvents(response.data.total);
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_URL}/api/events${urlPath}`,
+      {
+        headers: {
+          "Cache-Control": "no-cache",
+        },
+      }
+    );
+    setState(response.data.events);
+    if (setTotal) {
+      setTotal(response.data.total);
+    }
   } catch (error) {
     console.error("Failed to fetch events:", error);
   }
 };
+
 
 const handlePageChange = (page) => {
   setCurrentPage(page);

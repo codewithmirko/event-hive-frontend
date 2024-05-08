@@ -23,7 +23,7 @@ const UserProfilePage = () => {
             getDataEvent(`?attendee=${user._id}`, setJoinedEvents);
             getDataEvent(`?organizer=${user._id}`, setOrganizedEvents);
         }
-    }, [user]);
+    }, [user,getDataEvent]);
 
 
     const handleSaveChanges = async (values) => {
@@ -57,7 +57,7 @@ const UserProfilePage = () => {
             </Container>
         );
     }
-    // console.log(joinedEvents,organizedEvents,user?.favoritedEvents )
+    console.log(joinedEvents,organizedEvents,user?.favoritedEvents )
     return (
         <Container size="md" mt={50}>
             <Title align="center">User Profile</Title>
