@@ -7,6 +7,9 @@ const EventContext = createContext();
 
 const EventProvider = ({ children }) => {
   const [events, setEvents] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalEvents, setTotalEvents] = useState(0);
+  const pageSize = 15;  // Define how many items per page you want
   const navigate = useNavigate(); // Hook for navigation
 
   // Function to retrieve the auth token from localStorage
@@ -23,21 +26,34 @@ const EventProvider = ({ children }) => {
   });
 
   // Updated to accept optional parameters for filtering and setting state
-  const getDataEvent = async (urlPath = "", setState = setEvents) => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/events${urlPath}`,
-        {
-          headers: {
-            "Cache-Control": "no-cache",
-          },
-        }
-      );
-      setState(response.data);
-    } catch (error) {
-      console.error("Failed to fetch events:", error);
-    }
-  };
+// Updated to accept currentPage for pagination
+const getDataEvent = async (filters = {}, page = 1) => {
+  const { organizer, attendee, eventType } = filters;
+  const offset = (page - 1) * pageSize;
+  const queryParams = new URLSearchParams({
+    limit: pageSize,
+    offset,
+    ...(organizer && { organizer }),
+    ...(attendee && { attendee }),
+    ...(eventType && { eventType })
+  });
+
+  try {
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/events?${queryParams.toString()}`, {
+      headers: { "Cache-Control": "no-cache" }
+    });
+    console.log(response.data.total)
+    setEvents(response.data.events);
+    setTotalEvents(response.data.total);
+  } catch (error) {
+    console.error("Failed to fetch events:", error);
+  }
+};
+
+const handlePageChange = (page) => {
+  setCurrentPage(page);
+  getDataEvent({}, page); // Assuming no filters applied initially; adjust as needed
+};
 
   const updateEvent = async (id, updatedEventData) => {
     try {
@@ -135,10 +151,18 @@ const EventProvider = ({ children }) => {
     getDataEvent();
   }, []);
 
+  // Initial fetch or dependency changes
+  useEffect(() => {
+    getDataEvent({}, currentPage); // Initial fetch and re-fetch on page change
+  }, [currentPage]);
   return (
     <EventContext.Provider
       value={{
         events,
+        currentPage,
+        totalEvents,
+        pageSize,
+        handlePageChange,
         getDataEvent,
         updateEvent,
         deleteEvent,
