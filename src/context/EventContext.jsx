@@ -27,10 +27,15 @@ const EventProvider = ({ children }) => {
 
   // Updated to accept optional parameters for filtering and setting state
 // Updated to accept currentPage for pagination
-const getDataEvent = async (urlPath = "", setState = setEvents, setTotal = setTotalEvents) => {
+const getDataEvent = async (urlPath = "", setState = setEvents, setTotal = setTotalEvents, currentPage = 1) => {
+  const offset = (currentPage - 1) * pageSize;  // Calculate offset based on current page
+  let queryParams = new URLSearchParams(urlPath);  // Assume urlPath includes query string if any
+  queryParams.set('limit', pageSize);  // Set limit for pagination
+  queryParams.set('offset', offset);  // Set offset for pagination
+
   try {
     const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/events${urlPath}`,
+      `${import.meta.env.VITE_API_URL}/api/events?${queryParams.toString()}`,  // Ensure the correct URL format
       {
         headers: {
           "Cache-Control": "no-cache",
@@ -49,8 +54,9 @@ const getDataEvent = async (urlPath = "", setState = setEvents, setTotal = setTo
 
 const handlePageChange = (page) => {
   setCurrentPage(page);
-  getDataEvent({}, page); // Assuming no filters applied initially; adjust as needed
+  getDataEvent("", setEvents, setTotalEvents, page);  // No filters, just pagination
 };
+
 
   const updateEvent = async (id, updatedEventData) => {
     try {
@@ -148,10 +154,12 @@ const handlePageChange = (page) => {
     getDataEvent();
   }, []);
 
-  // Initial fetch or dependency changes
-  useEffect(() => {
-    getDataEvent({}, currentPage); // Initial fetch and re-fetch on page change
-  }, [currentPage]);
+  // This effect will trigger when currentPage changes, calling getDataEvent with new page
+useEffect(() => {
+  getDataEvent("", setEvents, setTotalEvents, currentPage);
+}, [currentPage]);
+
+
   return (
     <EventContext.Provider
       value={{
