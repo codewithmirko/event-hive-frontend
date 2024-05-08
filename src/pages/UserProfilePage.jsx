@@ -23,7 +23,7 @@ const UserProfilePage = () => {
             getDataEvent(`?attendee=${user._id}`, setJoinedEvents);
             getDataEvent(`?organizer=${user._id}`, setOrganizedEvents);
         }
-    }, [user,getDataEvent]);
+    }, [user]);
 
 
     const handleSaveChanges = async (values) => {
