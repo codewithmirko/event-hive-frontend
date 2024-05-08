@@ -32,7 +32,7 @@ const ModifyEventPage = () => {
     if (eventId) {
       fetchEventDetails();
     }
-  }, [eventId, getDataEvent]); // Depend on eventId and getDataEvent
+  }, []); // Depend on eventId and getDataEvent
   
 
   const handleFormSubmit = async (updatedData) => {
