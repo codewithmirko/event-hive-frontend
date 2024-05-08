@@ -18,9 +18,9 @@ function ErrorPage() {
         <div>
           <Title className={classes.title}>Something is not right...</Title>
           <Text c="dimmed" size="lg">
-            Page you are trying to open does not exist. You may have mistyped
-            the address, or the page has been moved to another URL. If you think
-            this is an error contact support.
+            The Page you are trying to open does not exist. You may have
+            mistyped the address, or the page has been moved to another URL. If
+            you think this is an error contact support.
           </Text>
           <Link to="/" className={classes.link}>
             <Button
