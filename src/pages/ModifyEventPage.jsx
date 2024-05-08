@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Container, Title } from "@mantine/core";
+import { Container, Title,LoadingOverlay } from "@mantine/core";
 import EventForm from "../components/EventForm";
 import { EventContext } from "../context/EventContext";
 import { AuthContext } from "../context/auth.context";
@@ -29,10 +29,9 @@ const ModifyEventPage = () => {
       }
     };
   
-    if (eventId) {
-      fetchEventDetails();
-    }
-  }, []); // Depend on eventId and getDataEvent
+    fetchEventDetails();
+}, [eventId]); // This should only include eventId
+
   
 
   const handleFormSubmit = async (updatedData) => {
@@ -52,7 +51,13 @@ const ModifyEventPage = () => {
     }
   };
 
-  if (isLoading) return <Loader />;
+  if (isLoading) {
+    return (
+        <Container size="sm" mt={50}>
+            <LoadingOverlay visible={true} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
+        </Container>
+    );
+}
 
   return (
     <Container size="sm" mt="lg">
