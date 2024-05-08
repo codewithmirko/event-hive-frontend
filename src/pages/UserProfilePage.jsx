@@ -7,6 +7,7 @@ import { EventContext } from '../context/EventContext';
 import EventGrid from "../components/EventGrid.jsx";
 import axios from 'axios';
 
+
 const UserProfilePage = () => {
     const { user, isLoading, setIsLoading, fetchUserDetails, updateUserProfile } = useContext(AuthContext);
     const { getDataEvent } = useContext(EventContext)
@@ -27,19 +28,21 @@ const UserProfilePage = () => {
             return []; // Return empty array on error to prevent application crash
         }
     };
-    useEffect(() => {
-        const loadEvents = async () => {
-            if (user) {
-                getDataEvent(`?attendee=${user._id}`, setJoinedEvents);
-                getDataEvent(`?organizer=${user._id}`, setOrganizedEvents);
-    
-                if (user.favoritedEvents && user.favoritedEvents.length > 0) {
-                    const favoriteEvents = await fetchFavoriteEvents(user.favoritedEvents);
-                    setFavoritedEvents(favoriteEvents); // Assume you have a state for this
-                }
+
+    const loadEvents = async () => {
+        if (user) {
+            getDataEvent(`?attendee=${user._id}`, setJoinedEvents);
+            getDataEvent(`?organizer=${user._id}`, setOrganizedEvents);
+
+            if (user.favoritedEvents && user.favoritedEvents.length > 0) {
+                const favoriteEvents = await fetchFavoriteEvents(user.favoritedEvents);
+                setFavoritedEvents(favoriteEvents); // Assume you have a state for this
             }
-        };
-    
+        }
+
+    };
+
+    useEffect(() => {
         loadEvents();
     }, [user, getDataEvent]);
 
