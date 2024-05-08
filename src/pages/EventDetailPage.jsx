@@ -70,12 +70,12 @@ const EventDetailPage = () => {
 
   return (
     <Container>
-      <Card shadow="sm" p="lg">
+      <Card shadow="sm" p="lg" style={{ marginBottom: 30, marginTop: 40 }}>
         <Card.Section>
           <Image
             src={event.photo || "/default-event.jpg"}
             alt={event.eventname}
-            height={200}
+            height={300}
           />
         </Card.Section>
         <Group position="apart" style={{ marginBottom: 5, marginTop: "md" }}>
@@ -98,7 +98,7 @@ const EventDetailPage = () => {
         <EventModifier eventId={eventId} organizerId={event.organizer._id} />
         <Button
           variant="outline"
-          style={{ marginTop: 14 }}
+          style={{ width: "40%", margin: "0 auto", marginTop: 14 }}
           onClick={handleEventParticipation}
           disabled={!isLoggedIn || disableButton} // Disable if not logged in
         >

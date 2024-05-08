@@ -79,7 +79,11 @@ function CommentForm({ eventId, fetchComments }) {
           onChange={(e) => setNewComment(e.target.value)}
           onKeyDown={(event) => event.key === "Enter" && postComment()}
         />
-        <Button type="submit" onClick={postComment}>
+        <Button
+          type="submit"
+          onClick={postComment}
+          style={{ width: "40%", margin: "0 auto" }}
+        >
           Post Comment
         </Button>
       </Stack>
