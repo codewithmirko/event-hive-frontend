@@ -3,7 +3,7 @@ import { Text } from "@mantine/core";
 import { AuthContext } from "../context/auth.context";
 import axios from "axios";
 import Message from "./Message";
-import { showNotification } from "@mantine/notifications";
+import CustomNotification from "./CustomNotification";
 import CommentForm from "./CommentForm"; // Import the new component
 
 function Comments({ eventId }) {
@@ -44,20 +44,18 @@ function Comments({ eventId }) {
       setComments(data);
     } catch (err) {
       console.error("Error retrieving comments:", err);
-      showNotification({
-        title: "Error",
-        message: "Failed to retrieve comments.",
-        color: "red",
+      CustomNotification({
+        type: "error",
+        message: `Failed to retrieve comments.`,
       });
     }
   };
 
   const deleteComment = async (commentId) => {
     if (!user) {
-      showNotification({
-        title: "Unauthorized",
-        message: "You must be logged in to delete comments.",
-        color: "red",
+      CustomNotification({
+        type: "error",
+        message: `You must be logged in to delete comments.`,
       });
       return;
     }
@@ -65,17 +63,15 @@ function Comments({ eventId }) {
     try {
       await handleCommentAPI("delete", `/${commentId}`, user);
       fetchComments(); // Re-fetch comments to ensure the state matches the database after deletion
-      showNotification({
-        title: "Success",
-        message: "Comment deleted successfully.",
-        color: "green",
+      CustomNotification({
+        type: "success",
+        message: `Comment deleted succesfully.`,
       });
     } catch (error) {
       console.log(error);
-      showNotification({
-        title: "Error",
-        message: "Failed to delete comment.",
-        color: "red",
+      CustomNotification({
+        type: "error",
+        message: `Failed to delete comment.`,
       });
     }
   };
