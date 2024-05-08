@@ -1,5 +1,8 @@
 import { IconBookmark, IconHeart, IconShare } from "@tabler/icons-react";
-import { useState, useContext } from "react";
+import FavoriteIcon from "./FavoriteIcon";
+import { AuthContext } from "../context/auth.context"
+import { useContext } from 'react';
+
 import {
   Card,
   Image,
@@ -14,6 +17,7 @@ import {
 } from "@mantine/core";
 import classes from "../styles/EventCard.module.css";
 import { Link } from "react-router-dom";
+import { useResizeObserver } from "@mantine/hooks";
 
 
 function EventCard({
@@ -27,23 +31,11 @@ function EventCard({
   eventId,
 }) {
   const theme = useMantineTheme();
-  const [favoritedEvents, setFavoritedEvents] = useState(new Set());
+  //const { user } = useContext(AuthContext); // Access user from AuthContext
 
 
   const defaultImageSrc =
     "https://img.freepik.com/premium-vector/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available_87543-11093.jpg";
-
-  const toggleFavorite = (eventId) => {
-    setFavoritedEvents((prev) => {
-      const newFavs = new Set(prev);
-      if (newFavs.has(eventId)) {
-        newFavs.delete(eventId);
-      } else {
-        newFavs.add(eventId);
-      }
-      return newFavs;
-    });
-  };
 
 
   return (
@@ -91,16 +83,7 @@ function EventCard({
 
         <Group gap={8} mr={0}>
           <ActionIcon className={classes.action}>
-            <IconHeart
-              style={{ width: rem(16), height: rem(16) }}
-              color={theme.colors.red[6]}
-              fill={favoritedEvents.has(eventId) ? "red" : "none"}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                toggleFavorite(eventId);
-              }}
-            />
+            <FavoriteIcon eventId={eventId} />
           </ActionIcon>
         </Group>
       </Group>
