@@ -7,6 +7,12 @@ import { showNotification } from '@mantine/notifications'; // ???
 
 
 const EventForm = ({ onSubmit, initialData = {} }) => {
+  // Ensure date is a Date object
+  const safeInitialData = {
+    ...initialData,
+    date: new Date(initialData.date || Date.now()),  // Convert date to Date object if it's not already
+  };
+
   const form = useForm({
     initialValues: {
       eventname: '',
@@ -15,16 +21,20 @@ const EventForm = ({ onSubmit, initialData = {} }) => {
       location: '',
       date: new Date(),
       eventType: '',
-      ...initialData
+      ...safeInitialData
     },
     validate: {
       eventname: (value) => (value ? null : 'Event name is required'),
       location: (value) => (value ? null : 'Location is required'),
     },
   });
-
   const handleSubmit = (values) => {
-    onSubmit(values);
+    // Ensure date is in the right format or manipulate as needed before submitting
+    const preparedValues = {
+      ...values,
+      date: values.date.toISOString(),  // Ensure date is submitted as a string in ISO format
+    };
+    onSubmit(preparedValues);
   };
 
     return (

@@ -23,8 +23,9 @@ function EventGrid({ events, title='Events' }) {
   const handleSearch = (value) => {
     setSearchTerm(value.toLowerCase());
   };
-
+  
   const eventCards = filteredEvents.map((event) => (
+    
     <EventCard
       key={event._id}
       eventName={event.eventname}
@@ -36,7 +37,9 @@ function EventGrid({ events, title='Events' }) {
       eventType={event.eventType}
       eventId={event._id}
       className={classes.card}
+      organizerId={event.organizer._id}
     />
+    
   ));
 
   return (
@@ -51,6 +54,7 @@ function EventGrid({ events, title='Events' }) {
 <div style={{ display: 'flex', justifyContent: 'center' }}>
     <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="lg" >
         {eventCards}
+        {console.log(eventCards)}
     </SimpleGrid>
 </div>
 

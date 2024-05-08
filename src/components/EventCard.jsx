@@ -14,6 +14,7 @@ import {
 } from "@mantine/core";
 import classes from "../styles/EventCard.module.css";
 import { Link } from "react-router-dom";
+import EventModifier from "./EventModifier";
 
 
 function EventCard({
@@ -25,6 +26,7 @@ function EventCard({
   organizer,
   eventType,
   eventId,
+  organizerId,
 }) {
   const theme = useMantineTheme();
   const [favoritedEvents, setFavoritedEvents] = useState(new Set());
@@ -90,6 +92,7 @@ function EventCard({
         </Center>
 
         <Group gap={8} mr={0}>
+          <EventModifier eventId={eventId} organizerId={organizerId}/>
           <ActionIcon className={classes.action}>
             <IconHeart
               style={{ width: rem(16), height: rem(16) }}
