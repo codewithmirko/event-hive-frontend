@@ -8,10 +8,13 @@ import {
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import { useForm } from "@mantine/form";
+import { useNavigate } from 'react-router-dom';
+
 // Import Mantine core styles
 
 const EventForm = ({ onSubmit, initialData = {} }) => {
   // Ensure date is a Date object
+  const navigate = useNavigate();
   const safeInitialData = {
     ...initialData,
     date: new Date(initialData.date || Date.now()), // Convert date to Date object if it's not already
@@ -40,6 +43,11 @@ const EventForm = ({ onSubmit, initialData = {} }) => {
     };
     onSubmit(preparedValues);
   };
+
+    // Function to handle cancel action
+    const handleCancel = () => {
+      navigate(-1); // Navigates back to the previous page
+    };
 
   return (
     <Card shadow="sm" padding="lg" radius="md">
@@ -79,6 +87,7 @@ const EventForm = ({ onSubmit, initialData = {} }) => {
         />
         <Group position="right" mt="md">
           <Button type="submit">Submit</Button>
+          <Button type="button" color="gray" onClick={handleCancel}>Cancel</Button>
         </Group>
       </form>
     </Card>

@@ -15,21 +15,25 @@ const ModifyEventPage = () => {
 
   useEffect(() => {
     const fetchEventDetails = async () => {
+      setIsLoading(true);
       try {
-        await getDataEvent(`/${eventId}`, setEventData); // Assume getDataEvent can accept endpoint and setter function
+        await getDataEvent(`/${eventId}`, setEventData); // `setEventData` handles setting the state for single event data
         setIsLoading(false);
       } catch (error) {
         console.error("Failed to fetch event details:", error);
         setIsLoading(false);
         CustomNotification({
           type: "error",
-          message: `Failed to fetch event details.`,
+          message: "Failed to fetch event details.",
         });
       }
     };
-
-    fetchEventDetails();
-  }, [eventId, getDataEvent]);
+  
+    if (eventId) {
+      fetchEventDetails();
+    }
+  }, [eventId, getDataEvent]); // Depend on eventId and getDataEvent
+  
 
   const handleFormSubmit = async (updatedData) => {
     try {

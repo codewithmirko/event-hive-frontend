@@ -16,6 +16,7 @@ import { AuthContext } from "../context/auth.context"; // Assuming you have a co
 import Comments from "../components/Comments";
 import EventModifier from "../components/EventModifier";
 import CustomNotification from "../components/CustomNotification";
+import FavoriteIcon from "../components/FavoriteIcon";
 
 const EventDetailPage = () => {
   const { eventId } = useParams();
@@ -96,6 +97,7 @@ const EventDetailPage = () => {
           Attendees: {event.attendees.map((a) => a.username).join(", ")}
         </Text>
         <EventModifier eventId={eventId} organizerId={event.organizer._id} />
+        <FavoriteIcon/>
         <Button
           variant="outline"
           style={{ width: "40%", margin: "0 auto", marginTop: 14 }}
