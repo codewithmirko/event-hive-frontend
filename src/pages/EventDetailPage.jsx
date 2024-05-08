@@ -14,6 +14,7 @@ import {
 import { EventContext } from "../context/EventContext";
 import { AuthContext } from "../context/auth.context"; // Assuming you have a context to manage authentication
 import Comments from "../components/Comments";
+import EventModifier from "../components/EventModifier";
 
 const EventDetailPage = () => {
   const { eventId } = useParams();
@@ -94,6 +95,7 @@ const EventDetailPage = () => {
         <Text size="sm">
           Attendees: {event.attendees.map((a) => a.username).join(", ")}
         </Text>
+        <EventModifier eventId={eventId} organizerId={event.organizer._id}/>
         <Button
           variant="outline"
           style={{ marginTop: 14 }}
