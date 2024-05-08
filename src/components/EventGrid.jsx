@@ -38,7 +38,7 @@ function EventGrid({ events, title = 'Events' }) {
       eventType={event.eventType}
       eventId={event._id}
       className={classes.card}
-      organizerId={event.organizer._id}
+      organizerId={event?.organizer?._id}
     />
 
   ));

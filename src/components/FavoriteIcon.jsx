@@ -1,76 +1,69 @@
-import { useState, useContext, useEffect } from "react";
-import { IconHeart } from "@tabler/icons-react";
 import classes from "../styles/EventCard.module.css";
-import { AuthContext } from "../context/auth.context";
-import axios from "axios";
-import CustomNotification from "./CustomNotification";
-import { useMantineTheme, rem } from "@mantine/core";
+import React, { useState, useEffect, useContext } from 'react';
+import { IconHeart } from '@tabler/icons-react';
+import { AuthContext } from '../context/auth.context';
+import axios from 'axios';
+import CustomNotification from './CustomNotification';
+import { ActionIcon, useMantineTheme, rem } from '@mantine/core';
 
 function FavoriteIcon({ eventId }) {
-    const { user, setIsLoading, fetchUserDetails } = useContext(AuthContext);
-    const [favoritedEvents, setFavoritedEvents] = useState(new Set());
+    const { user } = useContext(AuthContext);
+    const [isFavorited, setIsFavorited] = useState(false);
     const API_URL = import.meta.env.VITE_API_URL;
+    const [token, setToken] = useState('');
     const theme = useMantineTheme();
 
     useEffect(() => {
-        if (user) {
-            setFavoritedEvents(new Set(user?.favoritedEvents || []));
-        }
-    }, [user]);
+        // Check if the event is favorited when the component mounts or user changes
+        setIsFavorited(user?.favoritedEvents?.includes(eventId));
+    }, [user?.favoritedEvents, eventId]);  // Only depend on favoritedEvents and eventId
 
-    const handleFavoriteToggle = async (userId, eventId, isAdding) => {
-        setIsLoading(true);
-        const storedToken = localStorage.getItem("authToken");
+   
 
-        if (!storedToken) {
-            console.error("No session found, please log in.");
-            setIsLoading(false);
-            return;
-        }
+useEffect(() => {
+    setToken(localStorage.getItem("authToken"));
+}, [user]);
 
-        try {
-            const response = await axios.patch(`${API_URL}/auth/favorite-${isAdding ? 'add' : 'remove'}`, { userId, eventId }, {
-                headers: { Authorization: `Bearer ${storedToken}` }
-            });
+const handleFavoriteToggle = async () => {
+    const newFavoritedStatus = !isFavorited;
+    setIsFavorited(newFavoritedStatus);  // Optimistically update the UI
 
-            CustomNotification({
-                type: "success",
-                message: `Event ${isAdding ? 'added to' : 'removed from'} favorites successfully!`,
-            });
+    try {
+        await axios.patch(`${API_URL}/auth/favorite-${newFavoritedStatus ? 'add' : 'remove'}`, {
+            userId: user._id,
+            eventId
+        }, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        CustomNotification({
+            type: "success",
+            message: `Event ${newFavoritedStatus ? 'added to' : 'removed from'} favorites successfully!`,
+        });
+    } catch (error) {
+        setIsFavorited(!newFavoritedStatus); // Revert on failure
+        CustomNotification({
+            type: "error",
+            message: error.response?.data.message || `Failed to ${newFavoritedStatus ? 'add' : 'remove'} event from favorites`,
+        });
+    }
+};
 
-            setFavoritedEvents(prev => {
-                const newSet = new Set(prev);
-                if (isAdding) {
-                    newSet.add(eventId);
-                } else {
-                    newSet.delete(eventId);
-                }
-                return newSet;
-            });
-        } catch (error) {
-            CustomNotification({
-                type: "error",
-                message: error.response?.data.message || `Failed to ${isAdding ? 'add' : 'remove'} event from favorites`,
-            });
-        } finally {
-
-            setIsLoading(false);
-            fetchUserDetails(storedToken);
-        }
-    };
 
     return (
-        <IconHeart
-            style={{ width: rem(16), height: rem(16) }}
-            className={classes.iconStyle} // Assuming you have some CSS to apply
-            color={theme.colors.red[6]}
-            fill={favoritedEvents.has(eventId) ? "red" : "none"}
-            onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                handleFavoriteToggle(user.userId, eventId, !favoritedEvents.has(eventId));
-            }}
-        />
+        <ActionIcon className={classes.action}
+        onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleFavoriteToggle();
+        }}>
+            <IconHeart
+                style={{ width: rem(16), height: rem(16) }}
+                className={classes.iconStyle}
+                color={theme.colors.red[6]}
+                fill={isFavorited ? "red" : "none"}
+
+            />
+        </ActionIcon>
     );
 }
 

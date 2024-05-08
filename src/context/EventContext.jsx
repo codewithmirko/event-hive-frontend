@@ -27,27 +27,35 @@ const EventProvider = ({ children }) => {
 
   // Updated to accept optional parameters for filtering and setting state
 // Updated to accept currentPage for pagination
+
 const getDataEvent = async (urlPath = "", setState = setEvents, setTotal = setTotalEvents, currentPage = 1) => {
-  const offset = (currentPage - 1) * pageSize;  // Calculate offset based on current page
-  let queryParams = new URLSearchParams(urlPath);  // Assume urlPath includes query string if any
-  queryParams.set('limit', pageSize);  // Set limit for pagination
-  queryParams.set('offset', offset);  // Set offset for pagination
+  const baseUrl = `${import.meta.env.VITE_API_URL}/api/events`;
+  const isSingleEvent = urlPath.startsWith("/"); // Check if fetching a single event
+
+  let url = baseUrl;
+  if (isSingleEvent) {
+    url += urlPath; // For single event, urlPath would be "/{eventId}"
+  } else {
+    const offset = (currentPage - 1) * pageSize; // Calculate offset based on current page
+    let queryParams = new URLSearchParams(urlPath); // Assume urlPath includes query string if any
+    queryParams.set('limit', pageSize); // Set limit for pagination
+    queryParams.set('offset', offset); // Set offset for pagination
+    url += `?${queryParams.toString()}`; // For multiple events
+  }
 
   try {
-    const response = await axios.get(
-      `${import.meta.env.VITE_API_URL}/api/events?${queryParams.toString()}`,  // Ensure the correct URL format
-      {
-        headers: {
-          "Cache-Control": "no-cache",
-        },
-      }
-    );
-    setState(response.data.events);
-    if (setTotal) {
-      setTotal(response.data.total);
+    const response = await axios.get(url, {
+      headers: { "Cache-Control": "no-cache" },
+    });
+
+    if (isSingleEvent) {
+      setState(response.data); // Assuming the response will be a single event object
+    } else {
+      setState(response.data.events);
+      setTotal?.(response.data.total);
     }
   } catch (error) {
-    console.error("Failed to fetch events:", error);
+    console.error(`Failed to fetch ${isSingleEvent ? "event" : "events"}:`, error);
   }
 };
 

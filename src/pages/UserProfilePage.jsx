@@ -5,6 +5,7 @@ import UserDetails from '../components/UserDetails';
 import UserProfileForm from '../components/UserProfileForm';
 import { EventContext } from '../context/EventContext';
 import EventGrid from "../components/EventGrid.jsx";
+import axios from 'axios';
 
 const UserProfilePage = () => {
     const { user, isLoading, setIsLoading, fetchUserDetails, updateUserProfile } = useContext(AuthContext);
@@ -12,18 +13,35 @@ const UserProfilePage = () => {
     const [editMode, setEditMode] = useState(false);
     const [joinedEvents, setJoinedEvents] = useState([]);
     const [organizedEvents, setOrganizedEvents] = useState([]);
+    const [favoritedEvents, setFavoritedEvents ] = useState([])
 
-
-    useEffect(() => {
-        // Fetch initial 15 events (make sure your API supports this limit query)
-        
-
-        // Fetch specific sets of events if the user is logged in
-        if (user) {
-            getDataEvent(`?attendee=${user._id}`, setJoinedEvents);
-            getDataEvent(`?organizer=${user._id}`, setOrganizedEvents);
+    const fetchFavoriteEvents = async (eventIds) => {
+        const idsParam = eventIds.join(',');
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/events/by-ids?ids=${idsParam}`, {
+                headers: { "Cache-Control": "no-cache" },
+            });
+            return response.data; // Returns an array of event objects
+        } catch (error) {
+            console.error("Failed to fetch favorite events:", error);
+            return []; // Return empty array on error to prevent application crash
         }
-    }, [user]);
+    };
+    useEffect(() => {
+        const loadEvents = async () => {
+            if (user) {
+                getDataEvent(`?attendee=${user._id}`, setJoinedEvents);
+                getDataEvent(`?organizer=${user._id}`, setOrganizedEvents);
+    
+                if (user.favoritedEvents && user.favoritedEvents.length > 0) {
+                    const favoriteEvents = await fetchFavoriteEvents(user.favoritedEvents);
+                    setFavoritedEvents(favoriteEvents); // Assume you have a state for this
+                }
+            }
+        };
+    
+        loadEvents();
+    }, [user, getDataEvent]);
 
 
     const handleSaveChanges = async (values) => {
@@ -58,6 +76,9 @@ const UserProfilePage = () => {
         );
     }
     console.log(joinedEvents,organizedEvents,user?.favoritedEvents )
+
+    const MemoizedEventGrid = React.memo(EventGrid);
+
     return (
         <Container size="md" mt={50}>
             <Title align="center">User Profile</Title>
@@ -66,13 +87,14 @@ const UserProfilePage = () => {
             ) : (
                 <UserProfileForm user={user} onSave={handleSaveChanges} onCancel={() => setEditMode(false)} />
             )}
-    <>
-            <EventGrid title="Joined Events" events={joinedEvents} />
-            <EventGrid title="Organized Events" events={organizedEvents} />
-            <EventGrid title="Favorited Events" events={user?.favoritedEvents} />
+            <>
+                <MemoizedEventGrid title="Joined Events" events={joinedEvents} />
+                <MemoizedEventGrid title="Organized Events" events={organizedEvents} />
+                <EventGrid title="Favorited Events" events={favoritedEvents} />
             </>
         </Container>
     );
+    
 };
 
 export default UserProfilePage;
