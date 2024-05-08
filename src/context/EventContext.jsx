@@ -1,12 +1,15 @@
 import { createContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { showNotification } from "@mantine/notifications";
+import CustomNotification from "../components/CustomNotification";
 import axios from "axios";
 
 const EventContext = createContext();
 
 const EventProvider = ({ children }) => {
   const [events, setEvents] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalEvents, setTotalEvents] = useState(0);
+  const pageSize = 15;  // Define how many items per page you want
   const navigate = useNavigate(); // Hook for navigation
 
   // Function to retrieve the auth token from localStorage
@@ -23,21 +26,37 @@ const EventProvider = ({ children }) => {
   });
 
   // Updated to accept optional parameters for filtering and setting state
-  const getDataEvent = async (urlPath = "", setState = setEvents) => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/events${urlPath}`,
-        {
-          headers: {
-            "Cache-Control": "no-cache",
-          },
-        }
-      );
-      setState(response.data);
-    } catch (error) {
-      console.error("Failed to fetch events:", error);
+// Updated to accept currentPage for pagination
+const getDataEvent = async (urlPath = "", setState = setEvents, setTotal = setTotalEvents, currentPage = 1) => {
+  const offset = (currentPage - 1) * pageSize;  // Calculate offset based on current page
+  let queryParams = new URLSearchParams(urlPath);  // Assume urlPath includes query string if any
+  queryParams.set('limit', pageSize);  // Set limit for pagination
+  queryParams.set('offset', offset);  // Set offset for pagination
+
+  try {
+    const response = await axios.get(
+      `${import.meta.env.VITE_API_URL}/api/events?${queryParams.toString()}`,  // Ensure the correct URL format
+      {
+        headers: {
+          "Cache-Control": "no-cache",
+        },
+      }
+    );
+    setState(response.data.events);
+    if (setTotal) {
+      setTotal(response.data.total);
     }
-  };
+  } catch (error) {
+    console.error("Failed to fetch events:", error);
+  }
+};
+
+
+const handlePageChange = (page) => {
+  setCurrentPage(page);
+  getDataEvent("", setEvents, setTotalEvents, page);  // No filters, just pagination
+};
+
 
   const updateEvent = async (id, updatedEventData) => {
     try {
@@ -115,20 +134,18 @@ const EventProvider = ({ children }) => {
           updatedEvents[index] = { ...prevEvents[index], ...response.data };
           return updatedEvents;
         });
-        showNotification({
-          title: "Success",
+        CustomNotification({
+          type: "success",
           message: messageSuccess,
-          color: "green",
         });
       } else {
         throw new Error(`No data returned from ${endpoint} event API`);
       }
     } catch (error) {
       console.error(`Error ${actionType} event:`, error);
-      showNotification({
-        title: "Error",
+      CustomNotification({
+        type: "success",
         message: messageError,
-        color: "red",
       });
     }
   };
@@ -137,10 +154,20 @@ const EventProvider = ({ children }) => {
     getDataEvent();
   }, []);
 
+  // This effect will trigger when currentPage changes, calling getDataEvent with new page
+useEffect(() => {
+  getDataEvent("", setEvents, setTotalEvents, currentPage);
+}, [currentPage]);
+
+
   return (
     <EventContext.Provider
       value={{
         events,
+        currentPage,
+        totalEvents,
+        pageSize,
+        handlePageChange,
         getDataEvent,
         updateEvent,
         deleteEvent,

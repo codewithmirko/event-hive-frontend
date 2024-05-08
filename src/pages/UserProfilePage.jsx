@@ -57,7 +57,7 @@ const UserProfilePage = () => {
             </Container>
         );
     }
-    // console.log(joinedEvents,organizedEvents,user?.favoritedEvents )
+    console.log(joinedEvents,organizedEvents,user?.favoritedEvents )
     return (
         <Container size="md" mt={50}>
             <Title align="center">User Profile</Title>

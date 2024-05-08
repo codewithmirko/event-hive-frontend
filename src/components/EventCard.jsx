@@ -17,7 +17,7 @@ import {
 } from "@mantine/core";
 import classes from "../styles/EventCard.module.css";
 import { Link } from "react-router-dom";
-import { useResizeObserver } from "@mantine/hooks";
+import EventModifier from "./EventModifier";
 
 
 function EventCard({
@@ -29,6 +29,7 @@ function EventCard({
   organizer,
   eventType,
   eventId,
+  organizerId,
 }) {
   const theme = useMantineTheme();
   //const { user } = useContext(AuthContext); // Access user from AuthContext
@@ -82,6 +83,7 @@ function EventCard({
         </Center>
 
         <Group gap={8} mr={0}>
+          <EventModifier eventId={eventId} organizerId={organizerId} />
           <ActionIcon className={classes.action}>
             <FavoriteIcon eventId={eventId} />
           </ActionIcon>

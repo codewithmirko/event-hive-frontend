@@ -14,6 +14,8 @@ import {
 import { EventContext } from "../context/EventContext";
 import { AuthContext } from "../context/auth.context"; // Assuming you have a context to manage authentication
 import Comments from "../components/Comments";
+import EventModifier from "../components/EventModifier";
+import CustomNotification from "../components/CustomNotification";
 
 const EventDetailPage = () => {
   const { eventId } = useParams();
@@ -57,10 +59,9 @@ const EventDetailPage = () => {
       await fetchEvent(); // Optionally refetch event data to update the UI
     } catch (error) {
       console.error("Error during event participation:", error);
-      showNotification({
-        title: "Error",
-        message: "Failed to update event participation.",
-        color: "red",
+      CustomNotification({
+        type: "error",
+        message: `Failed to update event participation`,
       });
     } finally {
       setTimeout(() => setDisableButton(false), 2000); // Re-enable the button after 2 seconds
@@ -69,12 +70,12 @@ const EventDetailPage = () => {
 
   return (
     <Container>
-      <Card shadow="sm" p="lg">
+      <Card shadow="sm" p="lg" style={{ marginBottom: 30, marginTop: 40 }}>
         <Card.Section>
           <Image
             src={event.photo || "/default-event.jpg"}
             alt={event.eventname}
-            height={200}
+            height={300}
           />
         </Card.Section>
         <Group position="apart" style={{ marginBottom: 5, marginTop: "md" }}>
@@ -94,9 +95,10 @@ const EventDetailPage = () => {
         <Text size="sm">
           Attendees: {event.attendees.map((a) => a.username).join(", ")}
         </Text>
+        <EventModifier eventId={eventId} organizerId={event.organizer._id} />
         <Button
           variant="outline"
-          style={{ marginTop: 14 }}
+          style={{ width: "40%", margin: "0 auto", marginTop: 14 }}
           onClick={handleEventParticipation}
           disabled={!isLoggedIn || disableButton} // Disable if not logged in
         >

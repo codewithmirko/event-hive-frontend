@@ -16,6 +16,7 @@ import CreateEventPage from "./pages/CreateEventPage";
 import IsPrivate from "./components/IsPrivate";
 import UserProfilePage from "./pages/UserProfilePage";
 import AboutPage from "./pages/AboutPage";
+import ModifyEventPage from "./pages/ModifyEventPage";
 
 function App() {
   return (
@@ -37,6 +38,14 @@ function App() {
             element={
               <IsPrivate>
                 <UserProfilePage />
+              </IsPrivate>
+            }
+          />
+                    <Route
+            path="/modify-event/:eventId"
+            element={
+              <IsPrivate>
+                <ModifyEventPage/>
               </IsPrivate>
             }
           />
