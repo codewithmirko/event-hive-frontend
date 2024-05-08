@@ -16,35 +16,37 @@ const UserProfilePage = () => {
     const [organizedEvents, setOrganizedEvents] = useState([]);
     const [favoritedEvents, setFavoritedEvents ] = useState([])
 
-    const fetchFavoriteEvents = async (eventIds) => {
-        const idsParam = eventIds.join(',');
-        try {
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/events/by-ids?ids=${idsParam}`, {
-                headers: { "Cache-Control": "no-cache" },
-            });
-            return response.data; // Returns an array of event objects
-        } catch (error) {
-            console.error("Failed to fetch favorite events:", error);
-            return []; // Return empty array on error to prevent application crash
+const fetchFavoriteEvents = React.useCallback(async (eventIds) => {
+    const idsParam = eventIds.join(',');
+    try {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/events/by-ids?ids=${idsParam}`, {
+            headers: { "Cache-Control": "no-cache" },
+        });
+        return response.data; // Returns an array of event objects
+    } catch (error) {
+        console.error("Failed to fetch favorite events:", error);
+        return []; // Return empty array on error to prevent application crash
+    }
+}, []); // No dependencies means this function is created once per component instance
+
+
+const loadEvents = async () => {
+    if (user) {
+        const attendeesPromise = getDataEvent(`?attendee=${user._id}`, setJoinedEvents);
+        const organizersPromise = getDataEvent(`?organizer=${user._id}`, setOrganizedEvents);
+        await Promise.all([attendeesPromise, organizersPromise]);
+
+        if (user.favoritedEvents && user.favoritedEvents.length > 0) {
+            const favoriteEvents = await fetchFavoriteEvents(user.favoritedEvents);
+            setFavoritedEvents(favoriteEvents);
         }
-    };
+    }
+};
 
-    const loadEvents = async () => {
-        if (user) {
-            getDataEvent(`?attendee=${user._id}`, setJoinedEvents);
-            getDataEvent(`?organizer=${user._id}`, setOrganizedEvents);
-
-            if (user.favoritedEvents && user.favoritedEvents.length > 0) {
-                const favoriteEvents = await fetchFavoriteEvents(user.favoritedEvents);
-                setFavoritedEvents(favoriteEvents); // Assume you have a state for this
-            }
-        }
-
-    };
 
     useEffect(() => {
         loadEvents();
-    }, [user, getDataEvent]);
+    }, [user?._id]);
 
 
     const handleSaveChanges = async (values) => {
