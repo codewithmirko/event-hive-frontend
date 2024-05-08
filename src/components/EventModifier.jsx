@@ -6,10 +6,11 @@ import DeleteEventButton from './DeleteEventButton';
 const EventModifier = ({ eventId, organizerId }) => {
     const { user } = useContext(AuthContext);
     const isOwner = user?._id === organizerId; // Assuming organizer is stored directly in the event
+    const isAdmin = user?.userType === 'admin';
     
     return (
         <div>
-            {isOwner && (
+            {(isOwner || isAdmin) && (
                 <>
                     <ModifyEventButton eventId={eventId} />
                     <DeleteEventButton eventId={eventId} />
