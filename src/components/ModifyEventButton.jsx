@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 
 const ModifyEventButton = ({ eventId }) => {
     const navigate = useNavigate();
-    console.log('EVENT ID INSIDE MODIFY BUTTON', eventId)
     const handleModifyClick = () => {
         navigate(`/modify-event/${eventId}`); // Redirects to the modify event page
     };

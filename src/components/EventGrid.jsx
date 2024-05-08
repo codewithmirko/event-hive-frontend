@@ -54,7 +54,6 @@ function EventGrid({ events, title='Events' }) {
 <div style={{ display: 'flex', justifyContent: 'center' }}>
     <SimpleGrid cols={{ base: 1, sm: 2, md: 3 }} spacing="lg" >
         {eventCards}
-        {console.log(eventCards)}
     </SimpleGrid>
 </div>
 
