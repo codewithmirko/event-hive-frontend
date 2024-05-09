@@ -6,8 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { EventContext } from '../context/EventContext';
 
 const EventForm = ({ onSubmit, eventId }) => {
-  const { getDataEvent } = useContext(EventContext);
-  const [isLoading, setIsLoading] = useState(false);
+  const { getDataEvent} = useContext(EventContext);
+
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -28,24 +28,27 @@ const EventForm = ({ onSubmit, eventId }) => {
 
   useEffect(() => {
     if (eventId) {
-      setIsLoading(true);
+
       getDataEvent(`/${eventId}`, (data) => {
         if (data) {
           console.log('getting data')
           const date = data.date ? new Date(data.date) : new Date(); // Safeguard if date is undefined
           form.setValues({ ...data, date });
+
         } else {
+
           throw new Error("No data returned for event");
+          
         }
-        setIsLoading(false);
+
       }, null, null) // Only pass the setState function
         .catch(error => {
           console.error("Failed to fetch event details:", error);
           setError("Failed to fetch event details.");
-          setIsLoading(false);
+
         });
     }
-  }, [eventId]);
+  }, []);
 
   const handleSubmit = (values) => {
     const preparedValues = {
@@ -59,7 +62,6 @@ const EventForm = ({ onSubmit, eventId }) => {
     navigate(-1);
   };
 
-  if (isLoading) return <Loader size="xl" overlay label="Loading event details..." />;
 
   if (error) return <div>{error}</div>;
 

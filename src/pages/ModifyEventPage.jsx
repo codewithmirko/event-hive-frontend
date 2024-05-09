@@ -8,29 +8,10 @@ import CustomNotification from "../components/CustomNotification";
 
 const ModifyEventPage = () => {
   const { eventId } = useParams();
-  const { getDataEvent, updateEvent } = useContext(EventContext);
-  const [eventData, setEventData] = useState(null);
-  const { setIsLoading, isLoading } = useContext(AuthContext);
+  const {  updateEvent } = useContext(EventContext);
+  const { isLoading } = useContext(AuthContext);
   const navigate = useNavigate(); // Use the useNavigate hook
 
-  useEffect(() => {
-    const fetchEventDetails = async () => {
-      setIsLoading(true);
-      try {
-        await getDataEvent(`/${eventId}`, setEventData); // `setEventData` handles setting the state for single event data
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Failed to fetch event details:", error);
-        setIsLoading(false);
-        CustomNotification({
-          type: "error",
-          message: "Failed to fetch event details.",
-        });
-      }
-    };
-  
-    fetchEventDetails();
-}, [eventId]); // This should only include eventId
 
   
 
@@ -62,7 +43,7 @@ const ModifyEventPage = () => {
   return (
     <Container size="sm" mt="lg">
       <Title>Edit Event</Title>
-      {eventData ? (
+      {eventId ? (
         <EventForm onSubmit={handleFormSubmit} eventId={eventId} />
       ) : (
         <Title>No event found to edit.</Title>
