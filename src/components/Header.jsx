@@ -1,7 +1,16 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { Box, Button, Group, Divider, Drawer, ScrollArea, Image, LoadingOverlay } from "@mantine/core";
-import { Burger } from "@mantine/core";
+import {
+  Box,
+  Button,
+  Group,
+  Divider,
+  Drawer,
+  ScrollArea,
+  Image,
+  LoadingOverlay,
+} from "@mantine/core";
+import { Burger, AppShell } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { AuthContext } from "../context/auth.context";
 import SignButtons from "./SignButtons";
@@ -10,7 +19,8 @@ import logo from "../assets/logo-text-full-res.png";
 
 function Header() {
   const { isLoggedIn, isLoading, logOutUser } = useContext(AuthContext);
-  const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
+  const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
+    useDisclosure(false);
 
   const handleLogout = () => {
     closeDrawer();
@@ -18,10 +28,14 @@ function Header() {
   };
 
   return (
-    <Box pb={0}>
-      <LoadingOverlay visible={isLoading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
+    <Box pb={60}>
+      <LoadingOverlay
+        visible={isLoading}
+        zIndex={1000}
+        overlayProps={{ radius: "sm", blur: 2 }}
+      />
       {!isLoading && (
-        <header className={classes.header}>
+        <header className={`${classes.header} ${classes.sticky}`}>
           <Link to="/" className={`${classes.link} ${classes.logo}`}>
             <Image src={logo} height={35} width="auto" />
           </Link>
@@ -41,7 +55,11 @@ function Header() {
             )}
           </Group>
 
-          <Burger opened={drawerOpened} onClick={toggleDrawer} hiddenFrom="sm" />
+          <Burger
+            opened={drawerOpened}
+            onClick={toggleDrawer}
+            hiddenFrom="sm"
+          />
 
           <Drawer
             opened={drawerOpened}
@@ -64,7 +82,11 @@ function Header() {
                 </Group>
               ) : (
                 <Group justify="center" grow pb="xl" px="md">
-                  <Link to="/profile" className={classes.link} onClick={closeDrawer}>
+                  <Link
+                    to="/profile"
+                    className={classes.link}
+                    onClick={closeDrawer}
+                  >
                     Profile
                   </Link>
                   <Button variant="outline" color="red" onClick={handleLogout}>

@@ -6,6 +6,17 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 var(--mantine-spacing-md);
+  margin-bottom: 200px;
+}
+
+.sticky {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: white;
+  z-index: 10;
 }
 
 .buttons {
