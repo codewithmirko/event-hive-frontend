@@ -80,7 +80,6 @@ const loadEvents = async () => {
             </Container>
         );
     }
-    console.log(joinedEvents,organizedEvents,user?.favoritedEvents )
 
     const MemoizedEventGrid = React.memo(EventGrid);
 
