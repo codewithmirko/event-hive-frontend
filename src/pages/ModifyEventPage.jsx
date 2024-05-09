@@ -63,7 +63,7 @@ const ModifyEventPage = () => {
     <Container size="sm" mt="lg">
       <Title>Edit Event</Title>
       {eventData ? (
-        <EventForm onSubmit={handleFormSubmit} initialData={eventData} />
+        <EventForm onSubmit={handleFormSubmit} eventId={eventId} />
       ) : (
         <Title>No event found to edit.</Title>
       )}

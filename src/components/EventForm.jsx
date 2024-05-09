@@ -1,24 +1,15 @@
-import {
-  Button,
-  TextInput,
-  Textarea,
-  Select,
-  Group,
-  Card,
-} from "@mantine/core";
-import { DatePickerInput } from "@mantine/dates";
-import { useForm } from "@mantine/form";
+import React, { useContext, useEffect, useState } from 'react';
+import { Button, TextInput, Textarea, Select, Group, Card, Loader } from '@mantine/core';
+import { DatePickerInput } from '@mantine/dates';
+import { useForm } from '@mantine/form';
 import { useNavigate } from 'react-router-dom';
+import { EventContext } from '../context/EventContext';
 
-// Import Mantine core styles
-
-const EventForm = ({ onSubmit, initialData = {} }) => {
-  // Ensure date is a Date object
+const EventForm = ({ onSubmit, eventId }) => {
+  const { getDataEvent } = useContext(EventContext);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
-  const safeInitialData = {
-    ...initialData,
-    date: new Date(initialData.date || Date.now()), // Convert date to Date object if it's not already
-  };
 
   const form = useForm({
     initialValues: {
@@ -28,26 +19,49 @@ const EventForm = ({ onSubmit, initialData = {} }) => {
       location: "",
       date: new Date(),
       eventType: "",
-      ...safeInitialData,
     },
     validate: {
       eventname: (value) => (value ? null : "Event name is required"),
       location: (value) => (value ? null : "Location is required"),
     },
   });
+
+  useEffect(() => {
+    if (eventId) {
+      setIsLoading(true);
+      getDataEvent(`/${eventId}`, (data) => {
+        if (data) {
+          console.log('getting data')
+          const date = data.date ? new Date(data.date) : new Date(); // Safeguard if date is undefined
+          form.setValues({ ...data, date });
+        } else {
+          throw new Error("No data returned for event");
+        }
+        setIsLoading(false);
+      }, null, null) // Only pass the setState function
+        .catch(error => {
+          console.error("Failed to fetch event details:", error);
+          setError("Failed to fetch event details.");
+          setIsLoading(false);
+        });
+    }
+  }, [eventId]);
+
   const handleSubmit = (values) => {
-    // Ensure date is in the right format or manipulate as needed before submitting
     const preparedValues = {
       ...values,
-      date: values.date.toISOString(), // Ensure date is submitted as a string in ISO format
+      date: values.date.toISOString(),
     };
     onSubmit(preparedValues);
   };
 
-    // Function to handle cancel action
-    const handleCancel = () => {
-      navigate(-1); // Navigates back to the previous page
-    };
+  const handleCancel = () => {
+    navigate(-1);
+  };
+
+  if (isLoading) return <Loader size="xl" overlay label="Loading event details..." />;
+
+  if (error) return <div>{error}</div>;
 
   return (
     <Card shadow="sm" padding="lg" radius="md">
@@ -56,34 +70,34 @@ const EventForm = ({ onSubmit, initialData = {} }) => {
           required
           label="Event Name"
           placeholder="Enter event name"
-          {...form.getInputProps("eventname")}
+          {...form.getInputProps('eventname')}
         />
         <Textarea
           label="Description"
           placeholder="Describe the event"
-          {...form.getInputProps("description")}
+          {...form.getInputProps('description')}
         />
         <TextInput
           label="Photo URL"
           placeholder="http://example.com/photo.jpg"
-          {...form.getInputProps("photo")}
+          {...form.getInputProps('photo')}
         />
         <TextInput
           required
           label="Location"
           placeholder="Enter event location"
-          {...form.getInputProps("location")}
+          {...form.getInputProps('location')}
         />
         <DatePickerInput
           label="Event Date"
           placeholder="Pick date"
-          {...form.getInputProps("date")}
+          {...form.getInputProps('date')}
         />
         <Select
           label="Event Type"
           placeholder="Select event type"
           data={["Conference", "Meetup", "Seminar", "Workshop"]}
-          {...form.getInputProps("eventType")}
+          {...form.getInputProps('eventType')}
         />
         <Group position="right" mt="md">
           <Button type="submit">Submit</Button>
