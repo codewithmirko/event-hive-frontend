@@ -41,6 +41,14 @@ Other Search Filters:
 
 - search events that are filtered by event type, date
 
+Forget Password:
+
+- ask for reset email in case of forgotten password
+
+Random Location image
+
+- set random image of the specified location in case there is no image url provided
+
 # Client
 
 ## Routes
@@ -48,7 +56,7 @@ Other Search Filters:
 - / - Homepage
 - /about - About website and team
 - /event/create - Create an event
-<!-- - /event/update - Update an event -->
+- /modify-event/:eventId - update event information
 - /event/:eventId - Event details
 - /profile - Profile info and associated events
 - 404
@@ -59,23 +67,29 @@ Other Search Filters:
 - AboutPage (public only)
 - CreateEventPage (user only)
 - EventDetailPage (public)
-<!-- - UpdateEventPage (user only) -->
+- ModifyEventPage (user only)
 - ErrorPage (public)
+- UserProfilePage (user only)
 
 ## Components
 
 - CommentForm
 - Comments
 - CustomNotification
+- DeleteEventButton
 - EmployeeCard
 - EventCard
 - EventForm
-- EvenGrid
+- EventGrid
+- EventModifier
+- FavoriteIcon
 - FooterBar
 - Header
 - HeroSection
 - IsPrivate
 - Message
+- ModifyEventButton
+- PaginationControls
 - SearchBox
 - SignButtons
 - SignIn
