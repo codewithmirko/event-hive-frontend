@@ -10,7 +10,7 @@ import {
   Image,
   LoadingOverlay,
 } from "@mantine/core";
-import { Burger, AppShell } from "@mantine/core";
+import { Burger, AppShell, Avatar } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { AuthContext } from "../context/auth.context";
 import SignButtons from "./SignButtons";
@@ -18,7 +18,7 @@ import classes from "../styles/Header.module.css";
 import logo from "../assets/logo-text-full-res.png";
 
 function Header() {
-  const { isLoggedIn, isLoading, logOutUser } = useContext(AuthContext);
+  const { isLoggedIn, isLoading, logOutUser, user } = useContext(AuthContext);
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
 
@@ -46,7 +46,17 @@ function Header() {
             ) : (
               <>
                 <Link to="/profile" className={classes.link}>
-                  Profile
+                  Profile    
+                  
+                  <Avatar
+
+                    src={`https://api.multiavatar.com/${encodeURIComponent(
+                      user?.username
+                    )}.png`}
+                    alt={`${user?.username}'s avatar`}
+                    size={35}
+                    style={{ margin: "10px" , padding :"2px"}} // Center the avatar in its grid column
+                  />
                 </Link>
                 <Button variant="outline" color="red" onClick={handleLogout}>
                   Logout
@@ -88,6 +98,15 @@ function Header() {
                     onClick={closeDrawer}
                   >
                     Profile
+
+                      <Avatar
+                      src={`https://api.multiavatar.com/${encodeURIComponent(
+                        user?.username
+                      )}.png`}
+                      alt={`${user?.username}'s avatar`}
+                      size={30}
+                      style={{ margin: "10px" , padding :"2px"}} // Center the avatar in its grid column
+                    />
                   </Link>
                   <Button variant="outline" color="red" onClick={handleLogout}>
                     Logout
