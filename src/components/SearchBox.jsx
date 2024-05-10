@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styles from "../styles/SearchBox.module.css";
+import{ Text,TextInput  } from "@mantine/core"
 
 function SearchBox({ searchHandler }) {
   const [string, setString] = useState("");
@@ -11,12 +12,13 @@ function SearchBox({ searchHandler }) {
 
   return (
     <div className={styles.searchContainer}>
-      <label htmlFor="searchInput" className={styles.searchLabel}>
+      <Text htmlFor="searchInput" className={styles.searchLabel} size="sm">
         Search:
-      </label>
-      <input
+      </Text>
+      <TextInput
+      size="xs"
         type="text"
-        id="searchInput"
+        // id="searchInput"
         className={styles.searchInput}
         value={string}
         onChange={handleSearch}
