@@ -1,11 +1,8 @@
 import { useState } from "react";
 import {
   SimpleGrid,
-  Card,
-  Image,
   Text,
   Container,
-  AspectRatio,
   Title,
   Paper,
 } from "@mantine/core";
@@ -42,7 +39,7 @@ function EventGrid({ events, title = 'Events' }) {
     />
 
   ));
-
+  
   return (
     <Container py="xl">
       <Paper shadow="sm" radius="md" p="md" withBorder style={{ marginBottom: "20px" }}>

@@ -24,7 +24,7 @@ function Comments({ eventId }) {
 
   async function handleCommentAPI(method, endpoint, data = {}) {
     try {
-      console.log("DATA inside comment handler", data);
+      // console.log("DATA inside comment handler", data);
       const response = await axios({
         method: method,
         url: `${BACKEND_URL}/api/comments${endpoint}`,

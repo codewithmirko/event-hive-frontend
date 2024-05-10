@@ -31,7 +31,7 @@ const EventForm = ({ onSubmit, eventId }) => {
 
       getDataEvent(`/${eventId}`, (data) => {
         if (data) {
-          console.log('getting data')
+          // console.log('getting data')
           const date = data.date ? new Date(data.date) : new Date(); // Safeguard if date is undefined
           form.setValues({ ...data, date });
 

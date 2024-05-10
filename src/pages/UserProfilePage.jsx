@@ -50,7 +50,7 @@ const loadEvents = async () => {
 
 
     const handleSaveChanges = async (values) => {
-        console.log('Form values:', values);
+        // console.log('Form values:', values);
         setIsLoading(true)
         try {
             await updateUserProfile(values); // Send updated profile data

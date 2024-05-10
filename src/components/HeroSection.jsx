@@ -69,7 +69,7 @@ function HeroSection() {
             </Link>
           </Group>
         </div>
-        <img src={eventPicture} className={classes.image} />
+        <Image src={eventPicture} className={classes.image} />
       </div>
     </Container>
   );

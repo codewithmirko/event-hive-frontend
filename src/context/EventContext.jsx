@@ -15,8 +15,8 @@ const EventProvider = ({ children }) => {
   // Function to retrieve the auth token from localStorage
   const getToken = () => {
     const storedToken = localStorage.getItem("authToken");
-    console.log(`I am the storedToken:`, storedToken);
-    console.log("I am the getToken function");
+    // console.log(`I am the storedToken:`, storedToken);
+    // console.log("I am the getToken function");
     return storedToken ? `Bearer ${storedToken}` : null;
   };
 

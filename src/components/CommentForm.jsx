@@ -37,7 +37,7 @@ function CommentForm({ eventId, fetchComments }) {
     }
 
     try {
-      console.log("posting", newComment);
+      // console.log("posting", newComment);
       const response = await axios.post(
         `${BACKEND_URL}/api/comments/`,
         {
