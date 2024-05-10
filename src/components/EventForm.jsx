@@ -125,6 +125,12 @@ const EventForm = ({ onSubmit, eventId }) => {
             "Silent Disco",
           ]}
           searchable
+          styles={{
+            dropdown: {
+              backgroundColor: "#333", // A solid dark background
+              color: "#fff", // Ensuring text color is white for readability on the dark background
+            },
+          }}
           {...form.getInputProps("eventType")}
         />
         <Group position="right" mt="md">
